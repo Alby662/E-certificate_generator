@@ -1,0 +1,107 @@
+# Dependencies
+node_modules/
+*/node_modules/
+/.pnp
+.pnp.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+/coverage
+*.lcov
+.nyc_output
+
+# Production
+/build
+/dist
+/out
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+*.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+build_error.log
+
+# Vite
+dist-ssr
+*.local
+.vite
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Backend specific
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/assets/*
+!backend/assets/.gitkeep
+backend/templates/*
+!backend/templates/.gitkeep
+
+# Generated files
+*.pdf
+*.html
+!index.html
+test_output.*
+reproduce_issue.js
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~.nib
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Backups
+*_backup/
+backend_backup/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Certificates and keys
+*.pem
+*.key
+*.cert
+*.crt
+
+# Misc
+.cache
+.vercel
+.netlify
+.firebase
