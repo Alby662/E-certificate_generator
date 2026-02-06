@@ -1,0 +1,78 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  
+  projects     Project[]
+  
+  @@map("users")
+}
+
+model Project {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @map("user_id")
+  name         String
+  templatePath String    @map("template_path")
+  fields       String?   // JSON string storing field configuration
+  createdAt    DateTime  @default(now()) @map("created_at")
+  
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participants Participant[]
+  
+  @@map("projects")
+}
+
+model Participant {
+  id            Int       @id @default(autoincrement())
+  projectId     Int       @map("project_id")
+  name          String
+  email         String
+  certificateId String    @unique @map("certificate_id")
+  customData    String?   @map("custom_data") // JSON string for extra Excel columns
+  createdAt     DateTime  @default(now()) @map("created_at")
+  
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  certificate   Certificate?  // One-to-one relationship (optional until generated)
+  emailLogs     EmailLog[]
+  
+  @@index([projectId])
+  @@map("participants")
+}
+
+model Certificate {
+  id             Int       @id @default(autoincrement())
+  participantId  Int       @unique @map("participant_id")  // 🔒 One certificate per participant
+  filePath       String    @map("file_path")
+  generatedAt    DateTime  @default(now()) @map("generated_at")
+  
+  participant    Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  @@map("certificates")
+}
+
+model EmailLog {
+  id             Int       @id @default(autoincrement())
+  participantId  Int       @map("participant_id")
+  status         String    // 'pending', 'sent', 'failed', 'bounced'
+  errorMessage   String?   @map("error_message")
+  sentAt         DateTime? @map("sent_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  
+  participant    Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  @@index([participantId])
+  @@map("email_logs")
+}

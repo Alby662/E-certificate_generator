@@ -37,14 +37,31 @@ export function TemplateUploadStep({ onNext }) {
         formData.append('template', file);
 
         try {
+            // Get token from localStorage
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('Please login to continue');
+                setIsUploading(false);
+                return;
+            }
+
             const response = await fetch('/api/certificates/upload-template', {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 body: formData,
             });
             const data = await response.json();
 
             if (data.success) {
-                onNext(data.templatePath);
+                // Backend returns { success, data: { templatePath, publicUrl, filename } }
+                // Use publicUrl for display, templatePath for backend API calls
+                const templatePath = data.data?.publicUrl || data.data?.templatePath || data.templatePath;
+                console.log('[Template Upload] Received:', data.data);
+                console.log('[Template Upload] Using path:', templatePath);
+                onNext(templatePath);
             } else {
                 alert("Upload failed: " + data.message);
             }

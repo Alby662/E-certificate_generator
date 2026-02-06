@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,7 +13,18 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
     const [generatedCertificates, setGeneratedCertificates] = useState([]);
     const [error, setError] = useState(null);
 
+    // CONCURRENCY FIX: Prevent React Strict Mode double-execution
+    const hasStartedGeneration = useRef(false);
+
     useEffect(() => {
+        // In development, React Strict Mode intentionally double-renders
+        // This ref ensures generation only starts once
+        if (hasStartedGeneration.current) {
+            console.log('[Generation] Skipping duplicate call (React Strict Mode)');
+            return;
+        }
+        hasStartedGeneration.current = true;
+        console.log('[Generation] Starting generation (first call only)');
         startGeneration();
     }, []);
 
@@ -22,35 +33,55 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
         setProgress(10); // Start progress
 
         try {
-            // In a real scenario, we might want to upload the template first if not already done.
-            // Assuming templatePath is passed or we handle it.
-            // For this implementation, let's assume we send the request to generate.
+            // Get authentication token
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                setError('Please login to continue');
+                toast.error('Authentication required');
+                setIsGenerating(false);
+                return;
+            }
 
             const response = await fetch('/api/certificates/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     participants,
                     templatePath: templatePath || 'default-template.png',
-                    fields
+                    fields,
+                    projectName: `Certificate Project ${new Date().toLocaleDateString()}`
                 }),
             });
+
+            // PROOF: Show what's ACTUALLY being sent (not just counts)
+            console.log('========== FRONTEND REQUEST PAYLOAD ==========');
+            console.log('Participants (full array):', participants);
+            console.log('  → Count:', participants.length);
+            console.log('  → First participant:', participants[0]);
+            console.log('Fields (full array):', fields);
+            console.log('  → Count:', fields?.length);
+            console.log('  → First field:', fields?.[0]);
+            console.log('Template Path:', templatePath);
+            console.log('==============================================');
+            console.log('⚠️ Check Network Tab → Payload to see actual network request');
 
             const data = await response.json();
 
             if (data.success) {
                 setProgress(100);
                 setIsComplete(true);
-                setGeneratedCertificates(data.certificates);
-                toast.success(`Successfully generated ${data.generatedCount} certificates`);
+                setGeneratedCertificates(data.data.certificates);
+                toast.success(`Successfully generated ${data.data.generatedCount} certificates`);
             } else {
                 setError(data.message || "Generation failed");
                 toast.error("Generation failed");
             }
         } catch (err) {
-            setError("Network error during generation.");
+            setError(err.response?.data?.message || "Network error during generation.");
             toast.error("Network error");
         } finally {
             setIsGenerating(false);
@@ -59,11 +90,25 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
 
     const handleDownloadZip = async () => {
         try {
-            const filePaths = generatedCertificates.map(c => c.path);
+            // Get authentication token
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                toast.error('Please login to continue');
+                return;
+            }
+
+            // Use projectId from the first certificate's response
+            // The certificates array should have projectId from backend
+            const projectId = generatedCertificates[0]?.projectId || 1;
+
             const response = await fetch('/api/certificates/download-zip', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filePaths })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ projectId })
             });
 
             if (response.ok) {
@@ -78,7 +123,8 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
                 document.body.removeChild(a);
                 toast.success("Download started");
             } else {
-                toast.error("Failed to download ZIP");
+                const error = await response.json();
+                toast.error(error.message || "Failed to download ZIP");
             }
         } catch (err) {
             console.error(err);

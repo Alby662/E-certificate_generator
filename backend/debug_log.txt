@@ -1,0 +1,110 @@
+
+    Timestamp: 2026-02-06T16:02:33.345Z
+    Error: Could not find Chrome (ver. 144.0.7559.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npx puppeteer browsers install chrome`) or
+ 2. your cache path is incorrectly configured (which is: C:\Users\Rehan\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    Stack: Error: Could not find Chrome (ver. 144.0.7559.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npx puppeteer browsers install chrome`) or
+ 2. your cache path is incorrectly configured (which is: C:\Users\Rehan\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    at ChromeLauncher.resolveExecutablePath (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/BrowserLauncher.js:297:27)
+    at ChromeLauncher.computeLaunchArguments (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:86:24)
+    at async ChromeLauncher.launch (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/BrowserLauncher.js:49:28)
+    at async generateCertificate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/services/certificateGenerator.js:12:15)
+    at async generateCertificates (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/controllers/certificateController.js:84:13)
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T16:30:08.851Z
+    Error: Could not find Chrome (ver. 144.0.7559.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npx puppeteer browsers install chrome`) or
+ 2. your cache path is incorrectly configured (which is: C:\Users\Rehan\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    Stack: Error: Could not find Chrome (ver. 144.0.7559.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npx puppeteer browsers install chrome`) or
+ 2. your cache path is incorrectly configured (which is: C:\Users\Rehan\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    at ChromeLauncher.resolveExecutablePath (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/BrowserLauncher.js:297:27)
+    at ChromeLauncher.computeLaunchArguments (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:86:24)
+    at async ChromeLauncher.launch (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/BrowserLauncher.js:49:28)
+    at async generateCertificate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/services/certificateGenerator.js:12:15)
+    at async generateCertificates (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/controllers/certificateController.js:84:13)
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T16:42:06.124Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","certificateId":"CERT-1770396105710-0","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4858428735233911,"y":0.5522285310847498,"fontSize":0.045,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Event Name","x":0.49213492973521733,"y":0.6811192029130487,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770396002589-hy6pvhl-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770396105710-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T16:42:09.327Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","certificateId":"CERT-1770396105710-1","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4858428735233911,"y":0.5522285310847498,"fontSize":0.045,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Event Name","x":0.49213492973521733,"y":0.6811192029130487,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770396002589-hy6pvhl-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770396105710-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T17:52:09.440Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","certificateId":"CERT-1770400320332-0","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4855951981649351,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49039679877662345,"y":0.6957627118644069,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770400274381-ylhcs32-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770400320332-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T17:52:12.137Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","certificateId":"CERT-1770400320332-1","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4855951981649351,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49039679877662345,"y":0.6957627118644069,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770400274381-ylhcs32-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770400320332-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T17:59:43.088Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","certificateId":"CERT-1770400774095-0","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5144048018350649,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48079359755324685,"y":0.6822033898305085,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770400728063-voqn056-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770400774095-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T17:59:45.231Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","certificateId":"CERT-1770400774095-1","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5144048018350649,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48079359755324685,"y":0.6822033898305085,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770400728063-voqn056-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770400774095-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T18:05:37.828Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","certificateId":"CERT-1770401127946-0","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5072024009175324,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4903967987766235,"y":0.6822033898305084,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770401029322-1ypyeg8-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770401127946-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T18:05:40.375Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","certificateId":"CERT-1770401127946-1","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5072024009175324,"y":0.5516949152542373,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4903967987766235,"y":0.6822033898305084,"fontSize":0.025,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770401029322-1ypyeg8-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770401127946-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:04:33.375Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5096032012233764,"y":0.5550847457627119,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49279759908246756,"y":0.6855932203389832,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770404628661-56db59e-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770404672411-8ful8fc-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:12:42.590Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5096032012233765,"y":0.5584745762711865,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia","x":0.5,"y":0.6822033898305085,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405120469-esf3jhi-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405161723-f52mwkg-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:12:45.414Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5096032012233765,"y":0.5584745762711865,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Great Vibes"},{"id":"2","key":"event","label":"Technophelia","x":0.5,"y":0.6822033898305085,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Roboto"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405120469-esf3jhi-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405165359-gs6bpkt-1_Albion_Winston.pdf
+    --------------------------------------------------
+    

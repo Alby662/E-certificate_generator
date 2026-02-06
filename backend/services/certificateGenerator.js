@@ -6,14 +6,46 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const generateCertificate = async (participant, templatePath, outputPath, fields) => {
-  let browser;
-  try {
-    browser = await puppeteer.launch({
+// SINGLETON PATTERN: Reuse browser instance across all certificate generations
+let browserInstance = null;
+
+/**
+ * Get or create browser instance
+ * This prevents launching a new browser for every certificate
+ */
+const getBrowser = async () => {
+  if (!browserInstance) {
+    console.log('[Puppeteer] Launching new browser instance...');
+    browserInstance = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-    const page = await browser.newPage();
+
+    // Handle browser disconnect gracefully
+    browserInstance.on('disconnected', () => {
+      console.log('[Puppeteer] Browser disconnected, clearing instance');
+      browserInstance = null;
+    });
+  }
+  return browserInstance;
+};
+
+/**
+ * Graceful shutdown handler
+ */
+export const closeBrowser = async () => {
+  if (browserInstance) {
+    console.log('[Puppeteer] Closing browser instance...');
+    await browserInstance.close();
+    browserInstance = null;
+  }
+};
+
+export const generateCertificate = async (participant, templatePath, outputPath, fields) => {
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+
+  try {
 
     // Detect mime type
     const ext = path.extname(templatePath).toLowerCase();
@@ -109,14 +141,20 @@ export const generateCertificate = async (participant, templatePath, outputPath,
   } catch (error) {
     const errorLog = `
     Timestamp: ${new Date().toISOString()}
+    Participant: ${participant.name || 'Unknown'}
+    Template: ${templatePath}
     Error: ${error.message}
     Stack: ${error.stack}
     --------------------------------------------------
     `;
     fs.appendFileSync(path.join(__dirname, '../debug_log.txt'), errorLog);
-    console.error('Error generating PDF:', error);
+    console.error('[Certificate Generation Error]', error);
     throw error;
   } finally {
-    if (browser) await browser.close();
+    // CRITICAL: Only close the page, NOT the browser instance
+    // The browser instance is reused across all certificates
+    if (page) {
+      await page.close();
+    }
   }
 };

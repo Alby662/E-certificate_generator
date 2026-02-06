@@ -76,16 +76,34 @@ export function FieldDefinitionStep({ templatePath, onNext, onBack }) {
     // We need to convert the file path to a URL.
     // If path is `.../uploads/templates/image.png`, we want `/uploads/templates/image.png`.
 
+    // Construct proper backend URL for the template image
     const getImageUrl = (path) => {
         if (!path || typeof path !== 'string') return '';
+
+        // Backend URL (remove /api suffix if present)
+        const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
+        // If already a full URL, return as-is
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            return path;
+        }
+
         // Normalize path separators
         const normalized = path.replace(/\\/g, '/');
-        // Find 'uploads' and take everything after
-        const index = normalized.indexOf('uploads');
-        if (index !== -1) {
-            return `http://localhost:5000/${normalized.substring(index)}`;
+
+        // If path already starts with 'uploads/', use it directly
+        if (normalized.startsWith('uploads/')) {
+            return `${BACKEND_URL}/${normalized}`;
         }
-        return path;
+
+        // If path contains 'uploads' somewhere, extract from there
+        const uploadsIndex = normalized.indexOf('uploads');
+        if (uploadsIndex !== -1) {
+            return `${BACKEND_URL}/${normalized.substring(uploadsIndex)}`;
+        }
+
+        // If just a filename, prepend backend URL with uploads/templates/
+        return `${BACKEND_URL}/uploads/templates/${normalized}`;
     };
 
     return (
