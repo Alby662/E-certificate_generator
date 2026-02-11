@@ -10,6 +10,9 @@ export default defineConfig({
     },
   },
   server: {
+    watch: {
+      ignored: ['**/backend/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

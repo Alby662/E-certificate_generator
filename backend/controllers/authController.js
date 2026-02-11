@@ -148,7 +148,7 @@ export const getMe = async (req, res) => {
     try {
         // req.user is set by the auth middleware
         const user = await db.user.findUnique({
-            where: { id: req.user.userId }
+            where: { id: req.user.id }
         });
 
         if (!user) {

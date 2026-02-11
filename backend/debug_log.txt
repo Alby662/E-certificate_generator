@@ -108,3 +108,281 @@ For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides
     OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405165359-gs6bpkt-1_Albion_Winston.pdf
     --------------------------------------------------
     
+    Timestamp: 2026-02-06T19:21:19.979Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5024008003058441,"y":0.5550847457627119,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49279759908246756,"y":0.6855932203389832,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405587970-mhbajs7-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405678898-de6wz46-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:21:22.582Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5024008003058441,"y":0.5550847457627119,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49279759908246756,"y":0.6855932203389832,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405587970-mhbajs7-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405682516-gbmj0ud-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:26:29.802Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48112383136452147,"y":0.5544508904561576,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4889889016293042,"y":0.6922309997700867,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405940967-d5lk26d-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405988803-cit2715-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:26:32.188Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48112383136452147,"y":0.5544508904561576,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4889889016293042,"y":0.6922309997700867,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770405940967-d5lk26d-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770405992110-oslepcp-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:30:41.132Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49056191568226076,"y":0.5544508904561575,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4874158875763477,"y":0.6877862810272715,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770406181439-8dt3bbr-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770406240160-ssdye07-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:30:43.562Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49056191568226076,"y":0.5544508904561575,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4874158875763477,"y":0.6877862810272715,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770406181439-8dt3bbr-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770406243497-hiyib95-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:37:42.591Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49056191568226076,"y":0.5544508904561575,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48584287352339117,"y":0.6855639216558639,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770406615152-6y244oe-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770406661729-6n7k5z2-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:37:45.573Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49056191568226076,"y":0.5544508904561575,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display"},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48584287352339117,"y":0.6855639216558639,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat"}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770406615152-6y244oe-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770406665517-dg85e12-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:48:51.201Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.47955081731156496,"y":0.5500061717133423,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":0},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4889889016293042,"y":0.6766744841702335,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770407230139-3e98h6z-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770407330339-jaah8q8-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:48:54.413Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.47955081731156496,"y":0.5500061717133423,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":0},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4889889016293042,"y":0.6766744841702335,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770407230139-3e98h6z-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770407334341-8s6mq9p-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:50:27.021Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48112383136452147,"y":0.556673249827565,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":0},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48741588757634763,"y":0.678896843541641,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770407366837-7ybqfyd-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770407426943-17e0xws-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T19:50:32.291Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48112383136452147,"y":0.556673249827565,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":0},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48741588757634763,"y":0.678896843541641,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770407366837-7ybqfyd-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770407432222-0hea5wz-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T20:01:12.097Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49528095784113035,"y":0.5544508904561576,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49213492973521733,"y":0.6922309997700867,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770408005459-o28njxe-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770408071160-5oybrjs-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-06T20:01:15.126Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49528095784113035,"y":0.5544508904561576,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49213492973521733,"y":0.6922309997700867,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770408005459-o28njxe-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770408075046-58lprpw-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:46:38.892Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48584287352339117,"y":0.5300049373706739,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4874158875763477,"y":0.6877862810272716,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432333625-uygj79l-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432397828-krzupjr-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:46:42.806Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.48584287352339117,"y":0.5300049373706739,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4874158875763477,"y":0.6877862810272716,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432333625-uygj79l-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432402722-ux8466b-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:49:28.497Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4921349297352173,"y":0.46111179685703807,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4921349297352173,"y":0.6433390935991194,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432516601-iz8fsjr-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432568394-tkvvlae-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:49:32.180Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4921349297352173,"y":0.46111179685703807,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4921349297352173,"y":0.6433390935991194,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432516601-iz8fsjr-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432572106-fmktc2y-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:51:46.126Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.503146028105913,"y":0.49222482805674456,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49056191568226076,"y":0.6633403279417879,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432589146-g9uci6a-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432706051-p6wwc3t-0_Rehan_Jamaar.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T02:51:49.307Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.503146028105913,"y":0.49222482805674456,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49056191568226076,"y":0.6633403279417879,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770432589146-g9uci6a-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770432709247-xzrfkwl-1_Albion_Winston.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T06:42:31.786Z
+    Participant: Christopher-James Montgomery III
+    Template: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770446536305-xo1at3i-1769503616807-Final_Certificate_Yukti_Yantra.png
+    Error: The "list" argument must be an instance of SharedArrayBuffer, ArrayBuffer or ArrayBufferView.
+    Stack: TypeError: The "list" argument must be an instance of SharedArrayBuffer, ArrayBuffer or ArrayBufferView.
+    at TextDecoder.decode (node:internal/encoding:447:16)
+    at toUTF8String (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:3:70)
+    at Object.validate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:49:24)
+    at file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:959:56
+    at Array.find (<anonymous>)
+    at detector (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:959:16)
+    at imageSize (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:967:16)
+    at generateCertificate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/services/certificateGenerator.js:51:24)
+    at async file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/routes/certificateRoutes.js:154:9
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T07:00:52.105Z
+    Participant: Christopher-James Montgomery III
+    Template: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770447648273-pohkglr-1769503616807-Final_Certificate_Yukti_Yantra.png
+    Error: The "list" argument must be an instance of SharedArrayBuffer, ArrayBuffer or ArrayBufferView.
+    Stack: TypeError: The "list" argument must be an instance of SharedArrayBuffer, ArrayBuffer or ArrayBufferView.
+    at TextDecoder.decode (node:internal/encoding:447:16)
+    at toUTF8String (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:3:70)
+    at Object.validate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:49:24)
+    at file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:959:56
+    at Array.find (<anonymous>)
+    at detector (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:959:16)
+    at imageSize (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/node_modules/image-size/dist/index.mjs:967:16)
+    at generateCertificate (file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/services/certificateGenerator.js:51:24)
+    at async file:///E:/Projects_/Yukti%20Yantra/e-certificate-generator/backend/routes/certificateRoutes.js:150:9
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-07T07:11:28.814Z
+    Participant: {"name":"Christopher-James Montgomery III","email":"test@certificate-generator.com","event":"International Student Leadership Summit 2026","date":"February 7, 2026"}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5,"y":0.5323645795134467,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Event Name","x":0.495273109395224,"y":0.6657556252621414,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770448273627-mdjkuc8-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\previews\preview_1770448288051.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-08T04:42:25.013Z
+    Participant: {"name":"Christopher-James Montgomery III","email":"test@certificate-generator.com","event":"International Student Leadership Summit 2026","date":"February 7, 2026"}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49527310939522395,"y":0.5301385097968672,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.48581932818567203,"y":0.6724338344118802,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770525570643-g2zob3s-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\previews\preview_1770525744101.pdf
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:11:35.970Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49037207926492493,"y":0.52816851455822,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Event Name","x":0.49037207926492493,"y":0.672350718438953,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770599455517-r081p6s-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770599490685-y2793te-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:11:39.236Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49037207926492493,"y":0.52816851455822,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Event Name","x":0.49037207926492493,"y":0.672350718438953,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770599455517-r081p6s-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770599496047-ih5luzc-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:13:19.982Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49684873959681597,"y":0.47448676688237607,"fontSize":0.045,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49369747919363205,"y":0.6345906492300264,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770599542500-4zqjlb3-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770599596661-jbnkzh3-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:13:23.309Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49684873959681597,"y":0.47448676688237607,"fontSize":0.045,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49369747919363205,"y":0.6345906492300264,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770599542500-4zqjlb3-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770599600026-vr1q3mr-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:27:21.883Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.503151260403184,"y":0.5190081612139689,"fontSize":0.04,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49842436979840804,"y":0.661303485828982,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770600364628-hz6xwmf-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770600437834-jowf80w-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T01:27:28.746Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.503151260403184,"y":0.5190081612139689,"fontSize":0.04,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49842436979840804,"y":0.661303485828982,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770600364628-hz6xwmf-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770600441925-nci25m5-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T03:26:57.198Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49527310939522395,"y":0.5234603006471282,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.490546218790448,"y":0.6702077646953006,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770607508351-sjlegzp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770607594427-1j6chym-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-09T03:27:12.876Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49527310939522395,"y":0.5234603006471282,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.490546218790448,"y":0.6702077646953006,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770607508351-sjlegzp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770607617237-823l7c0-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T09:39:24.166Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.498424369798408,"y":0.5145560217808096,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.488970588588856,"y":0.6657556252621413,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770802126619-drv2hms-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770802760109-1flz8r4-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T09:39:27.414Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.498424369798408,"y":0.5145560217808096,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.488970588588856,"y":0.6657556252621413,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770802126619-drv2hms-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770802764203-kcjnhav-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    

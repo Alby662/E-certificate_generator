@@ -272,6 +272,36 @@ export default function FieldEditorCanvas({ src, initialFields = [], onChange })
                                 />
                             </label>
                         </div>
+                        {/* VERTICAL OFFSET (NUDGE) CONTROL */}
+                        <div className="mt-3">
+                            <label className="text-sm font-medium">
+                                Vertical Offset (Fine-tune)
+                            </label>
+                            <div className="mt-1 flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => updateField(f.id, { vOffset: (f.vOffset || 0) - 1 })}
+                                    className="px-3 py-1 border rounded bg-background hover:bg-muted"
+                                    title="Move up 1px"
+                                >
+                                    ↑
+                                </button>
+                                <span className="text-sm font-mono min-w-[50px] text-center">
+                                    {f.vOffset || 0}px
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => updateField(f.id, { vOffset: (f.vOffset || 0) + 1 })}
+                                    className="px-3 py-1 border rounded bg-background hover:bg-muted"
+                                    title="Move down 1px"
+                                >
+                                    ↓
+                                </button>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Fine-tune vertical position for perfect alignment
+                            </p>
+                        </div>
                     </div>
                 ))}
             </div>

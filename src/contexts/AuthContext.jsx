@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../lib/api';
 
 const AuthContext = createContext(null);
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = `${API_BASE_URL}/api`;
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -12,6 +13,11 @@ export const AuthProvider = ({ children }) => {
 
     // Configure axios globally
     useEffect(() => {
+        // Set base URL and timeout
+        axios.defaults.baseURL = API_BASE_URL;
+        axios.defaults.timeout = 15000;  // 15s timeout for auth requests
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             fetchUser();

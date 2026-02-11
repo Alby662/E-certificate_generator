@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../lib/api';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -6,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle, Mail, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
-export function EmailSendingStep({ participants, certificates, onFinish }) {
+export function EmailSendingStep({ project, participants, certificates, onFinish }) {
     const [status, setStatus] = useState({ sent: 0, failed: 0, total: participants.length, errors: [] });
     const [isSending, setIsSending] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
@@ -26,17 +27,29 @@ export function EmailSendingStep({ participants, certificates, onFinish }) {
 
             const certMap = {};
             certificates.forEach(c => {
-                certMap[c.certificate_id] = c.path;
+                // Backend expects a map of { certificate_id: fileName }
+                // We will resolve the full path on the backend
+                certMap[c.certificate_id] = c.fileName || c.filePath || c.path;
             });
 
-            const response = await fetch('/api/certificates/send-emails', {
+            // Get token
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error("Please login to send emails");
+                setIsSending(false);
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/api/certificates/send-emails`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     participants,
-                    certificates: certMap
+                    certificates: certMap,
+                    projectId: project?.id
                 }),
             });
 
@@ -58,7 +71,8 @@ export function EmailSendingStep({ participants, certificates, onFinish }) {
     const pollStatus = () => {
         const interval = setInterval(async () => {
             try {
-                const response = await fetch('/api/certificates/status');
+                if (!project?.id) return;
+                const response = await fetch(`${API_BASE_URL}/api/certificates/email-status/${project.id}`);
                 const data = await response.json();
 
                 setStatus(data);

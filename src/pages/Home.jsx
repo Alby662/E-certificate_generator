@@ -14,6 +14,7 @@ export default function Home() {
     const [templatePath, setTemplatePath] = useState(null);
     const [fields, setFields] = useState([]);
     const [participants, setParticipants] = useState([]);
+    const [project, setProject] = useState(null);
     const [certificates, setCertificates] = useState([]);
 
     const handleTemplateUploaded = (path) => {
@@ -21,8 +22,11 @@ export default function Home() {
         setCurrentStep(2);
     };
 
-    const handleFieldsDefined = (definedFields) => {
+    const handleFieldsDefined = (definedFields, projectData) => {
         setFields(definedFields);
+        if (projectData) {
+            setProject(projectData);
+        }
         setCurrentStep(3);
     };
 
@@ -38,8 +42,13 @@ export default function Home() {
         setCurrentStep(5);
     };
 
-    const handleGenerationComplete = (generatedCerts) => {
+    const handleGenerationComplete = (generatedCerts, projectId) => {
         setCertificates(generatedCerts);
+        // If generation returned a project ID (potentially new or updated), update state
+        if (projectId) {
+            // Merge with existing project or create simple object if null
+            setProject(prev => prev ? { ...prev, id: projectId } : { id: projectId });
+        }
         setCurrentStep(6);
     };
 
@@ -61,9 +70,12 @@ export default function Home() {
                     )}
                     {currentStep === 2 && (
                         <FieldDefinitionStep
+                            project={project}
+                            participants={participants}
                             templatePath={templatePath}
                             onNext={handleFieldsDefined}
                             onBack={() => setCurrentStep(1)}
+                            onUpdateProject={(updatedProject) => setProject(updatedProject)}
                         />
                     )}
                     {currentStep === 3 && (
@@ -91,6 +103,7 @@ export default function Home() {
                     )}
                     {currentStep === 6 && (
                         <EmailSendingStep
+                            project={project}
                             participants={participants}
                             certificates={certificates}
                             onFinish={handleProcessComplete}

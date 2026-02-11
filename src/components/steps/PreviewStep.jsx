@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, ArrowLeft } from "lucide-react";
+import { CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import FieldEditorCanvas from "@/components/field-editor-canvas";
 import { useMemo } from "react";
+import { API_BASE_URL } from '../../lib/api';
 
 export function PreviewStep({ participants, templatePath, fields, onNext, onBack }) {
 
@@ -12,7 +13,7 @@ export function PreviewStep({ participants, templatePath, fields, onNext, onBack
         const normalized = path.replace(/\\/g, '/');
         const index = normalized.indexOf('uploads');
         if (index !== -1) {
-            return `http://localhost:5000/${normalized.substring(index)}`;
+            return `${API_BASE_URL}/${normalized.substring(index)}`;
         }
         return path;
     };
@@ -97,8 +98,8 @@ export function PreviewStep({ participants, templatePath, fields, onNext, onBack
                             Back
                         </Button>
                         <Button onClick={onNext}>
-                            Confirm & Generate
-                            <CheckCircle className="ml-2 h-4 w-4" />
+                            Proceed to Generation
+                            <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
                 </CardContent>

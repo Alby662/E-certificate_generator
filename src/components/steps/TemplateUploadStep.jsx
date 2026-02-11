@@ -1,5 +1,6 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
+import { API_BASE_URL } from '../../lib/api';
 
 export function TemplateUploadStep({ onNext }) {
     const [isDragging, setIsDragging] = useState(false);
@@ -46,7 +47,7 @@ export function TemplateUploadStep({ onNext }) {
                 return;
             }
 
-            const response = await fetch('/api/certificates/upload-template', {
+            const response = await fetch(`${API_BASE_URL}/api/certificates/upload-template`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

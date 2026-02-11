@@ -1,122 +1,192 @@
 import { useState } from "react";
 import FieldEditorCanvas from "@/components/field-editor-canvas";
+import { PreviewModal } from "@/components/modals/PreviewModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, CheckCircle2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
+import { API_BASE_URL } from '../../lib/api';
 
-export function FieldDefinitionStep({ templatePath, onNext, onBack }) {
-    const [fields, setFields] = useState([
-        {
-            id: '1',
-            key: 'name',
-            label: 'Recipient Name',
-            x: 0.5,
-            y: 0.45,
-            fontSize: 0.05,
-            color: '#1a1a1a',
-            align: 'center',
-            fontWeight: 'bold',
-            fontFamily: 'Great Vibes'
-        },
-        {
-            id: '2',
-            key: 'event',
-            label: 'Event Name',
-            x: 0.5,
-            y: 0.55,
-            fontSize: 0.03,
-            color: '#333333',
-            align: 'center',
-            fontWeight: 'normal',
-            fontFamily: 'Roboto'
-        },
-        {
-            id: '3',
-            key: 'date',
-            label: 'Date',
-            x: 0.8,
-            y: 0.8,
-            fontSize: 0.02,
-            color: '#666666',
-            align: 'left',
-            fontWeight: 'normal',
-            fontFamily: 'Roboto'
+const defaultFields = [
+    {
+        id: '1',
+        key: 'name',
+        label: 'Recipient Name',
+        x: 0.5,
+        y: 0.45,
+        fontSize: 0.05,
+        color: '#1a1a1a',
+        align: 'center',
+        fontWeight: 'bold',
+        fontFamily: 'Playfair Display',
+        vOffset: -6
+    },
+    {
+        id: '2',
+        key: 'event',
+        label: 'Event Name',
+        x: 0.5,
+        y: 0.55,
+        fontSize: 0.03,
+        color: '#333333',
+        align: 'center',
+        fontWeight: 'normal',
+        fontFamily: 'Montserrat',
+        vOffset: -3
+    },
+    {
+        id: '3',
+        key: 'date',
+        label: 'Date',
+        x: 0.5,
+        y: 0.65,
+        fontSize: 0.025,
+        color: '#666666',
+        align: 'center',
+        fontWeight: 'normal',
+        fontFamily: 'Montserrat',
+        vOffset: 0
+    }
+];
+
+export function FieldDefinitionStep({ project, participants, templatePath, onNext, onBack, onUpdateProject }) {
+    const [fields, setFields] = useState(project?.fields || defaultFields);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+    // Approval State Logic
+    const isApproved = project?.previewApproved || false;
+    const isDirty = project?.lastFieldUpdateAt && project?.previewApprovedAt
+        ? new Date(project.lastFieldUpdateAt) > new Date(project.previewApprovedAt)
+        : false;
+
+    const handleNext = async () => {
+        if (fields.length === 0) {
+            toast.error("Please define at least one field.");
+            return;
         }
-    ]);
 
-    const handleNext = () => {
-        onNext(fields);
+        if (!isApproved || isDirty) {
+            toast.warning("Professional recommendation: Please preview and approve the certificate before proceeding.");
+        }
+
+        // CREATE PROJECT IF NOT EXISTS
+        if (!project?.id) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/certificates/create-project`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        name: `Project ${new Date().toLocaleString()}`,
+                        templatePath: templatePath,
+                        fields: fields
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    // Pass fields AND the new project object
+                    onNext(fields, data.project);
+                    return;
+                } else {
+                    toast.error("Failed to initialize project");
+                    // Fallback to continue without project ID (will be created at generation)
+                }
+            } catch (err) {
+                console.error("Project creation failed:", err);
+                // Fallback
+            }
+        }
+
+        // Check if onNext accepts the project argument (based on our future change to Home.jsx)
+        // If project exists, pass it too
+        onNext(fields, project);
     };
 
-    // Construct the full URL for the template image
-    // Assuming templatePath is relative to the backend uploads folder, served via /uploads
-    // But wait, the backend returns 'templatePath' which might be an absolute server path or relative.
-    // In TemplateUploadStep, we saw it returns `data.templatePath`.
-    // We need to make sure we can load this image in the canvas.
-    // If it's a local file path on the server, we need a URL to access it.
-    // The server.js has `app.use('/uploads', express.static(...))`.
-    // So if the path is `uploads/templates/file.png`, we can access it via `http://localhost:5000/uploads/templates/file.png`.
+    const handleApproval = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/certificates/projects/${project.id}/approve-preview`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-    // Let's assume the backend returns a path we can convert to a URL.
-    // Or better, let's fix the backend to return a relative URL.
-    // For now, let's try to construct a URL.
+            const data = await response.json();
 
-    // If templatePath is "backend/uploads/templates/..." or similar.
-    // Let's assume for now we can get it via /uploads if we strip the backend part.
+            if (data.success) {
+                if (onUpdateProject) {
+                    onUpdateProject(data.project);
+                }
+                setIsPreviewOpen(false);
+                toast.success("Certificate layout approved!");
+            } else {
+                toast.error("Failed to approve preview");
+            }
+        } catch (error) {
+            console.error('[Approval] Error:', error);
+            toast.error("Failed to save approval.");
+        }
+    };
 
-    // Actually, let's look at how we can get the image.
-    // If the user just uploaded it, maybe we can use a blob URL if we had it, but we only have the path from the server response.
-    // We'll assume the server serves it.
-
-    // HACK: For now, let's try to use the filename from the path if possible, or just assume it's served.
-    // If the path is absolute, we can't use it directly in the browser.
-    // We might need to update the backend to return a public URL.
-
-    // Let's assume the backend serves /uploads.
-    // We need to convert the file path to a URL.
-    // If path is `.../uploads/templates/image.png`, we want `/uploads/templates/image.png`.
-
-    // Construct proper backend URL for the template image
     const getImageUrl = (path) => {
         if (!path || typeof path !== 'string') return '';
-
-        // Backend URL (remove /api suffix if present)
-        const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
-
-        // If already a full URL, return as-is
-        if (path.startsWith('http://') || path.startsWith('https://')) {
-            return path;
-        }
-
-        // Normalize path separators
         const normalized = path.replace(/\\/g, '/');
-
-        // If path already starts with 'uploads/', use it directly
-        if (normalized.startsWith('uploads/')) {
-            return `${BACKEND_URL}/${normalized}`;
-        }
-
-        // If path contains 'uploads' somewhere, extract from there
-        const uploadsIndex = normalized.indexOf('uploads');
-        if (uploadsIndex !== -1) {
-            return `${BACKEND_URL}/${normalized.substring(uploadsIndex)}`;
-        }
-
-        // If just a filename, prepend backend URL with uploads/templates/
-        return `${BACKEND_URL}/uploads/templates/${normalized}`;
+        const index = normalized.indexOf('uploads');
+        return index !== -1 ? `${API_BASE_URL}/${normalized.substring(index)}` : path;
     };
 
     return (
         <Card className="w-full max-w-6xl mx-auto">
-            <CardHeader>
-                <CardTitle>Define Certificate Fields</CardTitle>
-                <CardDescription>
-                    Drag and drop fields to position them on your certificate.
-                    Click a field to edit its properties.
-                </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Define Certificate Fields</CardTitle>
+                    <CardDescription>
+                        Drag and drop fields to position them exactly on your template.
+                    </CardDescription>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <Button
+                        variant={isApproved && !isDirty ? "outline" : "default"}
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="gap-2"
+                    >
+                        <Eye className="h-4 w-4" />
+                        {isApproved && !isDirty ? "Review Preview" : "Preview Certificate"}
+                    </Button>
+                    {isApproved && !isDirty && (
+                        <div className="flex items-center text-green-600 text-sm font-medium gap-1 px-3 py-2 bg-green-50 rounded-md border border-green-200">
+                            <CheckCircle2 className="h-4 w-4" />
+                            Approved
+                        </div>
+                    )}
+                    {isDirty && (
+                        <div className="flex items-center text-amber-600 text-sm font-medium gap-1 px-3 py-2 bg-amber-50 rounded-md border border-amber-200">
+                            <AlertCircle className="h-4 w-4" />
+                            Re-preview Required
+                        </div>
+                    )}
+                </div>
             </CardHeader>
+
             <CardContent>
-                <div className="min-h-[600px]">
+                {(!isApproved || isDirty) && (
+                    <Alert className="mb-4">
+                        <AlertDescription>
+                            {isDirty
+                                ? "Fields were modified after approval. Please re-preview before bulk generation."
+                                : "Please preview and approve the certificate layout before proceeding to bulk generation."}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                <div className="min-h-[600px] border rounded-lg bg-slate-100 overflow-hidden">
                     <FieldEditorCanvas
                         src={getImageUrl(templatePath)}
                         initialFields={fields}
@@ -135,6 +205,16 @@ export function FieldDefinitionStep({ templatePath, onNext, onBack }) {
                     </Button>
                 </div>
             </CardContent>
+
+            <PreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                projectId={project?.id}
+                participants={participants}
+                templatePath={templatePath}
+                fields={fields}
+                onApprove={handleApproval}
+            />
         </Card>
     );
 }

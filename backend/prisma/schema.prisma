@@ -22,16 +22,29 @@ model User {
 }
 
 model Project {
-  id           Int       @id @default(autoincrement())
-  userId       Int       @map("user_id")
-  name         String
-  templatePath String    @map("template_path")
-  fields       String?   // JSON string storing field configuration
-  createdAt    DateTime  @default(now()) @map("created_at")
+  id                Int       @id @default(autoincrement())
+  userId            Int       @map("user_id")
+  name              String
+  templatePath      String    @map("template_path")
+  fields            String?   // JSON string storing field configuration
+  createdAt         DateTime  @default(now()) @map("created_at")
   
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  participants Participant[]
+  // PHASE 3: Preview Approval Tracking
+  previewApproved   Boolean   @default(false) @map("preview_approved")
+  previewApprovedAt DateTime? @map("preview_approved_at")
+  lastFieldUpdateAt DateTime  @default(now()) @map("last_field_update_at")
   
+  // PHASE 4: Email Tracking
+  emailStatus       String    @default("not_started") @map("email_status") // 'not_started', 'in_progress', 'completed', 'failed'
+  emailSentCount    Int       @default(0) @map("email_sent_count")
+  emailFailedCount  Int       @default(0) @map("email_failed_count")
+  emailStartedAt    DateTime? @map("email_started_at")
+  emailCompletedAt  DateTime? @map("email_completed_at")
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participants      Participant[]
+  
+  @@unique([userId, name]) // Prevent duplicate project names for the same user
   @@map("projects")
 }
 
@@ -68,6 +81,8 @@ model EmailLog {
   participantId  Int       @map("participant_id")
   status         String    // 'pending', 'sent', 'failed', 'bounced'
   errorMessage   String?   @map("error_message")
+  errorCategory  String?   @map("error_category") // 'configuration' | 'recipient' | 'attachment' | 'rate_limit' | 'network' | 'unknown'
+  attempts       Int       @default(1) // Track retry count
   sentAt         DateTime? @map("sent_at")
   createdAt      DateTime  @default(now()) @map("created_at")
   

@@ -5,12 +5,19 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle, ArrowRight, Download } from "lucide-react";
 import { toast } from "sonner";
+import { API_BASE_URL } from '../../lib/api';
 
-export function GenerationStep({ participants, templatePath, fields, onNext }) {
+export function GenerationStep({ project, participants, templatePath, fields, onNext }) {
+    // Confirmation state
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [existingCount, setExistingCount] = useState(0);
+
+    // Restored state variables
     const [progress, setProgress] = useState(0);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const [generatedCertificates, setGeneratedCertificates] = useState([]);
+    const [responseProjectId, setResponseProjectId] = useState(null);
     const [error, setError] = useState(null);
 
     // CONCURRENCY FIX: Prevent React Strict Mode double-execution
@@ -20,15 +27,69 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
         // In development, React Strict Mode intentionally double-renders
         // This ref ensures generation only starts once
         if (hasStartedGeneration.current) {
-            console.log('[Generation] Skipping duplicate call (React Strict Mode)');
             return;
         }
         hasStartedGeneration.current = true;
-        console.log('[Generation] Starting generation (first call only)');
-        startGeneration();
+
+        // CHECK FOR EXISTING DATA BEFORE STARTING
+        checkExistingDataAndStart();
     }, []);
 
+    const checkExistingDataAndStart = async () => {
+        if (project?.id) {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return; // Should handle auth error
+
+                // Check status
+                const res = await fetch(`${API_BASE_URL}/api/certificates/projects/${project.id}/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.total > 0) {
+                    setExistingCount(data.total);
+                    setShowConfirmation(true);
+                    return; // STOP! Wait for user confirmation
+                }
+            } catch (e) {
+                console.error("Failed to check existing status", e);
+                // If check fails, maybe just proceed? Or show error?
+                // Proceeding is safer for UX flow if API is flaky, 
+                // but risky for data. Let's proceed with warning in console.
+            }
+        }
+
+        // If no existing data or no project ID (new project), start immediately
+        startGeneration();
+    };
+
+    const confirmGeneration = () => {
+        setShowConfirmation(false);
+        startGeneration();
+    };
+
+    const cancelGeneration = () => {
+        // Go back? Or just stay here?
+        // Ideally should allow user to go back to prev step.
+        // For now, toast and stay.
+        toast.info("Generation cancelled.");
+        // Maybe reset ref to allow retry?
+        hasStartedGeneration.current = false; // Allow retry if they change their mind
+    };
+
+    // ... startGeneration definition ...
     const startGeneration = async () => {
+        // ... existing implementation ...
+        // HARD APPROVAL GATE REMOVED: Preview approval is now optional
+        // User can proceed directly to generation
+
+        // Optional: We can still log if it was approved or not, but won't block
+        const isApproved = project?.previewApproved;
+        if (!isApproved) {
+            console.log('[Generation] Proceeding without explicit preview approval (User Flexibility)');
+        }
+
         setIsGenerating(true);
         setProgress(10); // Start progress
 
@@ -43,7 +104,7 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
                 return;
             }
 
-            const response = await fetch('/api/certificates/generate', {
+            const response = await fetch(`${API_BASE_URL}/api/certificates/generate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,21 +114,14 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
                     participants,
                     templatePath: templatePath || 'default-template.png',
                     fields,
-                    projectName: `Certificate Project ${new Date().toLocaleDateString()}`
+                    projectName: `Certificate Project ${new Date().toLocaleDateString()}`,
+                    projectId: project?.id // PASS EXISTING PROJECT ID
                 }),
             });
 
-            // PROOF: Show what's ACTUALLY being sent (not just counts)
+            // LOGGING
             console.log('========== FRONTEND REQUEST PAYLOAD ==========');
-            console.log('Participants (full array):', participants);
-            console.log('  → Count:', participants.length);
-            console.log('  → First participant:', participants[0]);
-            console.log('Fields (full array):', fields);
-            console.log('  → Count:', fields?.length);
-            console.log('  → First field:', fields?.[0]);
-            console.log('Template Path:', templatePath);
-            console.log('==============================================');
-            console.log('⚠️ Check Network Tab → Payload to see actual network request');
+            console.log('Project ID:', project?.id);
 
             const data = await response.json();
 
@@ -75,6 +129,7 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
                 setProgress(100);
                 setIsComplete(true);
                 setGeneratedCertificates(data.data.certificates);
+                setResponseProjectId(data.data.projectId);
                 toast.success(`Successfully generated ${data.data.generatedCount} certificates`);
             } else {
                 setError(data.message || "Generation failed");
@@ -88,21 +143,16 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
         }
     };
 
+    // ... handleDownloadZip ...
     const handleDownloadZip = async () => {
         try {
-            // Get authentication token
             const token = localStorage.getItem('token');
-
             if (!token) {
                 toast.error('Please login to continue');
                 return;
             }
-
-            // Use projectId from the first certificate's response
-            // The certificates array should have projectId from backend
             const projectId = generatedCertificates[0]?.projectId || 1;
-
-            const response = await fetch('/api/certificates/download-zip', {
+            const response = await fetch(`${API_BASE_URL}/api/certificates/download-zip`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,6 +181,28 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
             toast.error("Download error");
         }
     };
+
+    if (showConfirmation) {
+        return (
+            <Card className="w-full max-w-2xl mx-auto border-amber-200 bg-amber-50">
+                <CardHeader>
+                    <CardTitle className="text-amber-800">Existing Data Found</CardTitle>
+                    <CardDescription className="text-amber-700">
+                        This project already has {existingCount} generated certificates.
+                        Generating again will <strong>delete all existing warnings</strong> and create new ones.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex gap-4 justify-end">
+                    <Button variant="outline" onClick={cancelGeneration} className="border-amber-300 text-amber-900 hover:bg-amber-100">
+                        Cancel
+                    </Button>
+                    <Button onClick={confirmGeneration} className="bg-amber-600 hover:bg-amber-700 text-white">
+                        Yes, Overwrite & Regenerate
+                    </Button>
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card className="w-full max-w-2xl mx-auto">
@@ -184,7 +256,10 @@ export function GenerationStep({ participants, templatePath, fields, onNext }) {
                         Download All (ZIP)
                     </Button>
                     <Button
-                        onClick={() => onNext(generatedCertificates)}
+                        onClick={() => {
+                            // Pass certificates AND the projectId (from response or props)
+                            onNext(generatedCertificates, responseProjectId || project?.id);
+                        }}
                         disabled={!isComplete}
                         className="w-full"
                     >
