@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import sizeOf from 'image-size'; // NEW: Read native template dimensions
 import { fileURLToPath } from 'url';
+import logger from '../utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -254,17 +255,16 @@ export const generateCertificate = async (participant, templatePath, outputPath,
     }
 
     // Log to debug file
-    const logData = `
-    Timestamp: ${new Date().toISOString()}
-    Participant: ${JSON.stringify(participant)}
-    Template Dimensions: ${width}x${height}px
-    Fields: ${JSON.stringify(fields)}
-    TemplatePath: ${templatePath}
-    OutputPath: ${outputPath}
-    Status: SUCCESS
-    --------------------------------------------------
-    `;
-    fs.appendFileSync(path.join(__dirname, '../debug_log.txt'), logData);
+    // Log to rotating logger
+    logger.info('Certificate generated successfully', {
+      timestamp: new Date().toISOString(),
+      participant,
+      templateDimensions: `${width}x${height}px`,
+      fields,
+      templatePath,
+      outputPath,
+      status: 'SUCCESS'
+    });
 
     console.log('\n✅ ========== CERTIFICATE GENERATION COMPLETE ==========\n');
     return outputPath;
@@ -276,15 +276,13 @@ export const generateCertificate = async (participant, templatePath, outputPath,
     console.error('❌ Stack Trace:');
     console.error(error.stack);
 
-    const errorLog = `
-    Timestamp: ${new Date().toISOString()}
-    Participant: ${participant?.name || 'Unknown'}
-    Template: ${templatePath}
-    Error: ${error.message}
-    Stack: ${error.stack}
-    --------------------------------------------------
-    `;
-    fs.appendFileSync(path.join(__dirname, '../debug_log.txt'), errorLog);
+    logger.error('Certificate generation failed', {
+      timestamp: new Date().toISOString(),
+      participant: participant?.name || 'Unknown',
+      template: templatePath,
+      error: error.message,
+      stack: error.stack
+    });
 
     console.error('\n========== END ERROR REPORT ==========\n');
     throw error;

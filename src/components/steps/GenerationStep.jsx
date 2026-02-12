@@ -3,271 +3,374 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, CheckCircle, ArrowRight, Download } from "lucide-react";
+import { Loader2, CheckCircle, ArrowRight, Download, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE_URL } from '../../lib/api';
+import { PreviewModal } from '../modals/PreviewModal';
 
-export function GenerationStep({ project, participants, templatePath, fields, onNext }) {
+export function GenerationStep({ project, participants, templatePath, fields, onNext, isMultiEventMode }) {
     // Confirmation state
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const [existingCount, setExistingCount] = useState(0);
-
-    // Restored state variables
-    const [progress, setProgress] = useState(0);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
-    const [generatedCertificates, setGeneratedCertificates] = useState([]);
-    const [responseProjectId, setResponseProjectId] = useState(null);
+    const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
+    const [responseProjectId, setResponseProjectId] = useState(null);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-    // CONCURRENCY FIX: Prevent React Strict Mode double-execution
-    const hasStartedGeneration = useRef(false);
+    // Polling State
+    const [status, setStatus] = useState({
+        total: 0,
+        generation: { generated: 0, failed: 0, pending: 0 },
+        email: { sent: 0, failed: 0, pending: 0 }
+    });
 
+    // Multi-Event Status State
+    const [multiStatus, setMultiStatus] = useState({});
+
+    const pollingInterval = useRef(null);
+
+    // Cleanup polling on unmount
     useEffect(() => {
-        // In development, React Strict Mode intentionally double-renders
-        // This ref ensures generation only starts once
-        if (hasStartedGeneration.current) {
-            return;
-        }
-        hasStartedGeneration.current = true;
-
-        // CHECK FOR EXISTING DATA BEFORE STARTING
-        checkExistingDataAndStart();
+        return () => stopPolling();
     }, []);
 
-    const checkExistingDataAndStart = async () => {
-        if (project?.id) {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) return; // Should handle auth error
+    const stopPolling = () => {
+        if (pollingInterval.current) {
+            clearInterval(pollingInterval.current);
+            pollingInterval.current = null;
+        }
+    };
 
-                // Check status
-                const res = await fetch(`${API_BASE_URL}/api/certificates/projects/${project.id}/status`, {
+    const pollStatus = async (projectId) => {
+        try {
+            const token = localStorage.getItem('token');
+
+            if (isMultiEventMode && project?.events) {
+                // Multi-Event Polling
+                const newMultiStatus = { ...multiStatus };
+                let allComplete = true;
+                let totalGen = 0;
+                let totalTarget = 0;
+
+                await Promise.all(project.events.map(async (event) => {
+                    const res = await fetch(`${API_BASE_URL}/api/certificates/email-status/${event.id}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        newMultiStatus[event.id] = data;
+                        if (data.generation.pending > 0) allComplete = false;
+
+                        totalGen += data.generation.generated + data.generation.failed;
+                        totalTarget += data.total;
+                    }
+                }));
+
+                setMultiStatus(newMultiStatus);
+                const overallProgress = totalTarget > 0 ? (totalGen / totalTarget) * 100 : 0;
+                setProgress(Math.round(overallProgress));
+
+                if (allComplete && totalTarget > 0) {
+                    setIsComplete(true);
+                    setIsGenerating(false);
+                    stopPolling();
+                    toast.success("All certificates generated!");
+                }
+
+            } else {
+                // Single Event Polling
+                const res = await fetch(`${API_BASE_URL}/api/certificates/email-status/${projectId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
 
-                if (data.total > 0) {
-                    setExistingCount(data.total);
-                    setShowConfirmation(true);
-                    return; // STOP! Wait for user confirmation
+                if (data.success) {
+                    setStatus({
+                        total: data.total,
+                        generation: data.generation,
+                        email: data.email
+                    });
+
+                    // Calculate overall progress
+                    const genProgress = data.total > 0 ? ((data.generation.generated + data.generation.failed) / data.total) * 100 : 0;
+                    setProgress(Math.round(genProgress));
+
+                    // Check for completion
+                    if (data.generation.pending === 0 && data.total > 0) {
+                        setIsComplete(true);
+                        setIsGenerating(false);
+                        stopPolling();
+                        toast.success("Generation completed!");
+                    }
                 }
-            } catch (e) {
-                console.error("Failed to check existing status", e);
-                // If check fails, maybe just proceed? Or show error?
-                // Proceeding is safer for UX flow if API is flaky, 
-                // but risky for data. Let's proceed with warning in console.
             }
+        } catch (error) {
+            console.error("Polling error:", error);
         }
-
-        // If no existing data or no project ID (new project), start immediately
-        startGeneration();
     };
 
-    const confirmGeneration = () => {
-        setShowConfirmation(false);
-        startGeneration();
-    };
-
-    const cancelGeneration = () => {
-        // Go back? Or just stay here?
-        // Ideally should allow user to go back to prev step.
-        // For now, toast and stay.
-        toast.info("Generation cancelled.");
-        // Maybe reset ref to allow retry?
-        hasStartedGeneration.current = false; // Allow retry if they change their mind
-    };
-
-    // ... startGeneration definition ...
     const startGeneration = async () => {
-        // ... existing implementation ...
-        // HARD APPROVAL GATE REMOVED: Preview approval is now optional
-        // User can proceed directly to generation
-
-        // Optional: We can still log if it was approved or not, but won't block
-        const isApproved = project?.previewApproved;
-        if (!isApproved) {
-            console.log('[Generation] Proceeding without explicit preview approval (User Flexibility)');
-        }
-
         setIsGenerating(true);
-        setProgress(10); // Start progress
+        setIsComplete(false);
+        setProgress(0);
+        setError(null);
 
         try {
-            // Get authentication token
             const token = localStorage.getItem('token');
-
             if (!token) {
-                setError('Please login to continue');
                 toast.error('Authentication required');
                 setIsGenerating(false);
                 return;
             }
 
-            const response = await fetch(`${API_BASE_URL}/api/certificates/generate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    participants,
-                    templatePath: templatePath || 'default-template.png',
-                    fields,
-                    projectName: `Certificate Project ${new Date().toLocaleDateString()}`,
-                    projectId: project?.id // PASS EXISTING PROJECT ID
-                }),
-            });
+            if (isMultiEventMode && project?.events) {
+                // Multi-Event Generation: Trigger for each event individually
+                // Filter participants by matching their 'eventName' to the event's suffix (e.g., "Project - EventName")
+                let successCount = 0;
 
-            // LOGGING
-            console.log('========== FRONTEND REQUEST PAYLOAD ==========');
-            console.log('Project ID:', project?.id);
+                for (const event of project.events) {
+                    const targetParticipants = participants.filter(p => event.name.endsWith(p.eventName));
 
-            const data = await response.json();
+                    const response = await fetch(`${API_BASE_URL}/api/certificates/generate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            participants: targetParticipants,
+                            templatePath: templatePath || 'default-template.png',
+                            fields,
+                            projectName: event.name,
+                            projectId: event.id
+                        }),
+                    });
 
-            if (data.success) {
-                setProgress(100);
-                setIsComplete(true);
-                setGeneratedCertificates(data.data.certificates);
-                setResponseProjectId(data.data.projectId);
-                toast.success(`Successfully generated ${data.data.generatedCount} certificates`);
+                    if (response.ok) successCount++;
+                }
+
+                if (successCount > 0) {
+                    toast.success(`Started generation for ${successCount} events.`);
+                    // Start polling
+                    stopPolling();
+                    pollingInterval.current = setInterval(() => pollStatus(null), 3000); // Pass null or ignored ID
+                } else {
+                    setError("Failed to start generation for events.");
+                    setIsGenerating(false);
+                }
+
             } else {
-                setError(data.message || "Generation failed");
-                toast.error("Generation failed");
+                // Single Event Generation
+                const response = await fetch(`${API_BASE_URL}/api/certificates/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        participants,
+                        templatePath: templatePath || 'default-template.png',
+                        fields,
+                        projectName: `Event ${new Date().toLocaleDateString()}`,
+                        projectId: project?.id
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success || response.status === 202) {
+                    const pid = data.projectId || project?.id;
+                    setResponseProjectId(pid);
+                    toast.success('Generation started in background...');
+
+                    // Start Polling
+                    stopPolling();
+                    pollingInterval.current = setInterval(() => pollStatus(pid), 2000);
+                } else {
+                    setError(data.message || "Generation failed to start");
+                    setIsGenerating(false);
+                }
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Network error during generation.");
-            toast.error("Network error");
-        } finally {
+            console.error(err);
+            setError("Network error starting generation.");
             setIsGenerating(false);
         }
     };
 
-    // ... handleDownloadZip ...
+    const sanitizeFilename = (name) => {
+        if (!name) return 'certificates';
+        return name
+            .replace(/[/\\?%*:|"<>]/g, '-') // Replace invalid chars
+            .replace(/\s+/g, '_')           // Replace spaces
+            .substring(0, 50)               // Limit length
+            .trim() || 'certificates';
+    };
+
     const handleDownloadZip = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Please login to continue');
+            const pid = responseProjectId || project?.id;
+
+            if (!pid && !isMultiEventMode) {
+                toast.error("No project ID found to download.");
                 return;
             }
-            const projectId = generatedCertificates[0]?.projectId || 1;
-            const response = await fetch(`${API_BASE_URL}/api/certificates/download-zip`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ projectId })
-            });
 
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'certificates.zip';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                toast.success("Download started");
+            let projectsToDownload = [];
+            if (isMultiEventMode && project?.events) {
+                projectsToDownload = project.events.map(e => ({ id: e.id, name: e.name }));
             } else {
-                const error = await response.json();
-                toast.error(error.message || "Failed to download ZIP");
+                projectsToDownload = [{ id: pid, name: 'certificates' }];
             }
-        } catch (err) {
-            console.error(err);
-            toast.error("Download error");
+
+            toast.info(`Starting batch download for ${projectsToDownload.length} items...`);
+
+            for (let i = 0; i < projectsToDownload.length; i++) {
+                const p = projectsToDownload[i];
+                toast.loading(`Downloading ${p.name}...`, { id: `dl-${p.id}` });
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/certificates/download/${p.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+
+                    if (response.ok) {
+                        const contentDisposition = response.headers.get('Content-Disposition');
+                        let filename = `${sanitizeFilename(p.name)}.zip`;
+
+                        // Try to get filename from header
+                        if (contentDisposition) {
+                            const matches = /filename="?([^";\n]+)"?/.exec(contentDisposition);
+                            if (matches && matches[1]) {
+                                filename = matches[1];
+                            }
+                        }
+
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        a.remove();
+                        toast.success(`${p.name} downloaded`, { id: `dl-${p.id}` });
+                    } else {
+                        const data = await response.json();
+                        toast.error(`Failed ${p.name}: ${data.message || 'Error'}`, { id: `dl-${p.id}` });
+                    }
+                } catch (err) {
+                    toast.error(`Error downloading ${p.name}`, { id: `dl-${p.id}` });
+                }
+            }
+
+            toast.success("All downloads initiated!");
+
+        } catch (error) {
+            console.error('Download error:', error);
+            toast.error("Failed to complete batch download");
         }
     };
 
-    if (showConfirmation) {
-        return (
-            <Card className="w-full max-w-2xl mx-auto border-amber-200 bg-amber-50">
+    return (
+        <>
+            <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader>
-                    <CardTitle className="text-amber-800">Existing Data Found</CardTitle>
-                    <CardDescription className="text-amber-700">
-                        This project already has {existingCount} generated certificates.
-                        Generating again will <strong>delete all existing warnings</strong> and create new ones.
+                    <CardTitle>Certificate Generation</CardTitle>
+                    <CardDescription>
+                        {isGenerating ? "Processing your certificates..." : `Ready to process ${participants.length} certificates.`}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex gap-4 justify-end">
-                    <Button variant="outline" onClick={cancelGeneration} className="border-amber-300 text-amber-900 hover:bg-amber-100">
-                        Cancel
-                    </Button>
-                    <Button onClick={confirmGeneration} className="bg-amber-600 hover:bg-amber-700 text-white">
-                        Yes, Overwrite & Regenerate
-                    </Button>
+                <CardContent className="space-y-6">
+
+                    {/* Multi-Event Status Dashboard */}
+                    {isMultiEventMode && isGenerating && (
+                        <div className="space-y-4">
+                            {project?.events?.map(event => {
+                                const eStatus = multiStatus[event.id] || { generation: { generated: 0, total: 0 } };
+                                const total = eStatus.total || 1;
+                                const current = (eStatus.generation?.generated || 0) + (eStatus.generation?.failed || 0);
+                                const percent = (current / total) * 100;
+
+                                return (
+                                    <div key={event.id} className="border p-3 rounded bg-slate-50 text-sm">
+                                        <div className="flex justify-between mb-2">
+                                            <span className="font-semibold">{event.name}</span>
+                                            <span>{current} / {total}</span>
+                                        </div>
+                                        <Progress value={percent} className="h-2" />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* Standard Progress Dashboard */}
+                    {(!isMultiEventMode && (isGenerating || isComplete || progress > 0)) && (
+                        <div className="space-y-4 border p-4 rounded-lg bg-slate-50">
+                            <h3 className="font-semibold text-sm text-slate-700">Generation Status</h3>
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-xs text-slate-500">
+                                    <span>Generated</span>
+                                    <span>{status.generation.generated} / {status.total}</span>
+                                </div>
+                                <Progress value={(status.generation.generated / (status.total || 1)) * 100} className="h-2 bg-slate-200" />
+                            </div>
+                            {status.generation.failed > 0 && (
+                                <Alert variant="destructive" className="py-2">
+                                    <AlertDescription className="text-xs">
+                                        {status.generation.failed} certificates failed. @TODO Retry
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Actions */}
+                    {!isGenerating && !isComplete && (
+                        <div className="flex gap-4">
+                            {!isMultiEventMode && (
+                                <Button variant="outline" className="w-full" onClick={() => setIsPreviewOpen(true)}>
+                                    <Eye className="mr-2 h-4 w-4" /> Preview
+                                </Button>
+                            )}
+                            <Button className="w-full" onClick={startGeneration}>
+                                Start Generation {isMultiEventMode ? '(All Events)' : ''}
+                            </Button>
+                        </div>
+                    )}
+
+                    {isComplete && (
+                        <div className="flex gap-4">
+                            <Button
+                                onClick={() => onNext(null, responseProjectId)}
+                                className="w-full"
+                            >
+                                Continue to Email
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </div>
+                    )}
+
                 </CardContent>
             </Card>
-        );
-    }
 
-    return (
-        <Card className="w-full max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle>Generating Certificates</CardTitle>
-                <CardDescription>
-                    Please wait while we generate PDF certificates for {participants.length} participants.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="space-y-2">
-                    <div className="flex justify-between text-sm text-slate-500">
-                        <span>Progress</span>
-                        <span>{progress}%</span>
-                    </div>
-                    <Progress value={progress} className="w-full" />
-                </div>
-
-                {isGenerating && (
-                    <div className="flex items-center justify-center text-slate-500 py-4">
-                        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                        <span>Processing...</span>
-                    </div>
-                )}
-
-                {isComplete && (
-                    <Alert className="bg-green-50 border-green-200">
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                        <AlertTitle className="text-green-800">Complete!</AlertTitle>
-                        <AlertDescription className="text-green-700">
-                            All certificates have been generated successfully.
-                        </AlertDescription>
-                    </Alert>
-                )}
-
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-
-                <div className="flex gap-4">
-                    <Button
-                        onClick={handleDownloadZip}
-                        disabled={!isComplete}
-                        variant="outline"
-                        className="w-full"
-                    >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download All (ZIP)
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            // Pass certificates AND the projectId (from response or props)
-                            onNext(generatedCertificates, responseProjectId || project?.id);
-                        }}
-                        disabled={!isComplete}
-                        className="w-full"
-                    >
-                        Continue to Email Sending
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
+            <PreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                projectId={project?.id}
+                participants={participants}
+                templatePath={templatePath}
+                fields={fields}
+                onApprove={() => setIsPreviewOpen(false)}
+            />
+        </>
     );
 }
+

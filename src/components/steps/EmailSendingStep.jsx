@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle, Mail, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
-export function EmailSendingStep({ project, participants, certificates, onFinish }) {
+export function EmailSendingStep({ project, projectId, participants, certificates, onFinish }) {
     const [status, setStatus] = useState({ sent: 0, failed: 0, total: participants.length, errors: [] });
     const [isSending, setIsSending] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
@@ -72,7 +72,22 @@ export function EmailSendingStep({ project, participants, certificates, onFinish
         const interval = setInterval(async () => {
             try {
                 if (!project?.id) return;
-                const response = await fetch(`${API_BASE_URL}/api/certificates/email-status/${project.id}`);
+
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/api/certificates/email-status/${project.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) return;
+
                 const data = await response.json();
 
                 setStatus(data);
@@ -90,6 +105,45 @@ export function EmailSendingStep({ project, participants, certificates, onFinish
     };
 
     const progressPercentage = Math.round(((status.sent + status.failed) / status.total) * 100) || 0;
+
+    const handleDownloadZip = async () => {
+        try {
+            const currentProjectId = project?.id || projectId;
+            if (!currentProjectId) {
+                toast.error('Project ID not found');
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/certificates/download-zip`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ projectId: currentProjectId })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `certificates_${currentProjectId}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                toast.success("Download started");
+            } else {
+                const error = await response.json();
+                toast.error(error.message || "Failed to download ZIP");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Download error");
+        }
+    };
 
     return (
         <Card className="w-full max-w-2xl mx-auto">
@@ -123,19 +177,27 @@ export function EmailSendingStep({ project, participants, certificates, onFinish
                     </div>
                 </div>
 
-                {!isSending && !isComplete && (
-                    <Button onClick={startSending} className="w-full">
-                        Start Sending Emails
-                        <Mail className="ml-2 h-4 w-4" />
-                    </Button>
-                )}
+                <div className="flex flex-col gap-3">
+                    {!isSending && !isComplete && (
+                        <div className="flex gap-3">
+                            <Button onClick={handleDownloadZip} variant="outline" className="w-full">
+                                <Download className="mr-2 h-4 w-4" />
+                                Download ZIP
+                            </Button>
+                            <Button onClick={startSending} className="w-full">
+                                Start Sending Emails
+                                <Mail className="ml-2 h-4 w-4" />
+                            </Button>
+                        </div>
+                    )}
 
-                {isSending && (
-                    <div className="flex items-center justify-center text-slate-500 py-4">
-                        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                        <span>Sending emails...</span>
-                    </div>
-                )}
+                    {isSending && (
+                        <div className="flex items-center justify-center text-slate-500 py-4">
+                            <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                            <span>Sending emails...</span>
+                        </div>
+                    )}
+                </div>
 
                 {isComplete && (
                     <div className="space-y-4">
@@ -166,9 +228,15 @@ export function EmailSendingStep({ project, participants, certificates, onFinish
                             </Alert>
                         )}
 
-                        <Button onClick={onFinish} variant="outline" className="w-full">
-                            Return Home
-                        </Button>
+                        <div className="flex gap-3">
+                            <Button onClick={handleDownloadZip} variant="outline" className="w-full">
+                                <Download className="mr-2 h-4 w-4" />
+                                Download ZIP
+                            </Button>
+                            <Button onClick={onFinish} variant="outline" className="w-full">
+                                Return Home
+                            </Button>
+                        </div>
                     </div>
                 )}
             </CardContent>

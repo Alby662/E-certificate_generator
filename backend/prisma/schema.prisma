@@ -10,84 +10,138 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ===== USER MODEL =====
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  passwordHash String    @map("password_hash")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  
-  projects     Project[]
-  
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  passwordHash     String   @map("password_hash")
+  organizationName String?  @map("organization_name")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // New Relations
+  events       Event[]
+  participants Participant[]
+
+  @@index([email])
   @@map("users")
 }
 
-model Project {
-  id                Int       @id @default(autoincrement())
-  userId            Int       @map("user_id")
-  name              String
-  templatePath      String    @map("template_path")
-  fields            String?   // JSON string storing field configuration
-  createdAt         DateTime  @default(now()) @map("created_at")
-  
-  // PHASE 3: Preview Approval Tracking
+// ===== NEW: CENTRAL PARTICIPANT REGISTRY =====
+model Participant {
+  id     Int @id @default(autoincrement())
+  userId Int @map("user_id")
+
+  // Identity (immutable)
+  participantId String @unique @map("participant_id") // Global ID: "PART-timestamp-random"
+  email         String
+  name          String
+
+  // Optional metadata
+  phone        String?
+  organization String?
+  department   String?
+  jobTitle     String? @map("job_title")
+  customData   String? @map("custom_data") // JSON for additional fields
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participations EventParticipation[]
+
+  @@unique([userId, email]) // One participant per email per user
+  @@index([email])
+  @@index([userId])
+  @@map("participants") // Table renamed from 'new_participants'
+}
+
+// ===== RENAMED: PROJECT → EVENT =====
+model Event {
+  id     Int @id @default(autoincrement())
+  userId Int @map("user_id")
+
+  // Event details
+  name             String
+  eventDate        DateTime? @map("event_date")
+  eventType        String?   @map("event_type") // "conference", "workshop", "training"
+  description      String?
+  organizationName String    @map("organization_name")
+
+  // Certificate template
+  templatePath String @map("template_path")
+  fields       String // JSON field configurations
+
+  // Status tracking
   previewApproved   Boolean   @default(false) @map("preview_approved")
   previewApprovedAt DateTime? @map("preview_approved_at")
-  lastFieldUpdateAt DateTime  @default(now()) @map("last_field_update_at")
-  
-  // PHASE 4: Email Tracking
-  emailStatus       String    @default("not_started") @map("email_status") // 'not_started', 'in_progress', 'completed', 'failed'
-  emailSentCount    Int       @default(0) @map("email_sent_count")
-  emailFailedCount  Int       @default(0) @map("email_failed_count")
-  emailStartedAt    DateTime? @map("email_started_at")
-  emailCompletedAt  DateTime? @map("email_completed_at")
+  lastFieldUpdateAt DateTime? @map("last_field_update_at")
 
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  participants      Participant[]
-  
-  @@unique([userId, name]) // Prevent duplicate project names for the same user
-  @@map("projects")
+  // Email status (aggregate)
+  emailStatus      String?   @default("pending") @map("email_status")
+  emailSentCount   Int       @default(0) @map("email_sent_count")
+  emailFailedCount Int       @default(0) @map("email_failed_count")
+  emailStartedAt   DateTime? @map("email_started_at")
+  emailCompletedAt DateTime? @map("email_completed_at")
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participations EventParticipation[]
+
+  @@unique([userId, name, eventDate]) // Prevent duplicate events
+  @@index([userId])
+  @@index([eventDate])
+  @@map("events")
 }
 
-model Participant {
-  id            Int       @id @default(autoincrement())
-  projectId     Int       @map("project_id")
-  name          String
-  email         String
-  certificateId String    @unique @map("certificate_id")
-  customData    String?   @map("custom_data") // JSON string for extra Excel columns
-  createdAt     DateTime  @default(now()) @map("created_at")
-  
-  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  certificate   Certificate?  // One-to-one relationship (optional until generated)
-  emailLogs     EmailLog[]
-  
-  @@index([projectId])
-  @@map("participants")
-}
+// ===== NEW: JOIN TABLE - LINKS PARTICIPANTS TO EVENTS =====
+model EventParticipation {
+  id            Int @id @default(autoincrement())
+  participantId Int @map("participant_id")
+  eventId       Int @map("event_id")
 
-model Certificate {
-  id             Int       @id @default(autoincrement())
-  participantId  Int       @unique @map("participant_id")  // 🔒 One certificate per participant
-  filePath       String    @map("file_path")
-  generatedAt    DateTime  @default(now()) @map("generated_at")
-  
-  participant    Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  
-  @@map("certificates")
-}
+  // Certificate for THIS specific event
+  certificateId   String    @unique @map("certificate_id") // "CERT-timestamp-random-eventId-participantId"
+  certificatePath String?   @map("certificate_path")
+  generatedAt     DateTime? @map("generated_at")
 
-model EmailLog {
-  id             Int       @id @default(autoincrement())
-  participantId  Int       @map("participant_id")
-  status         String    // 'pending', 'sent', 'failed', 'bounced'
-  errorMessage   String?   @map("error_message")
-  errorCategory  String?   @map("error_category") // 'configuration' | 'recipient' | 'attachment' | 'rate_limit' | 'network' | 'unknown'
-  attempts       Int       @default(1) // Track retry count
-  sentAt         DateTime? @map("sent_at")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  
-  participant    Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  
+  // Event-specific data
+  role            String? // "attendee", "speaker", "organizer", "volunteer"
+  status          String? // "registered", "attended", "completed"
+  grade           String? // "A+", "Excellent", "Pass", etc.
+  remarks         String?
+  customEventData String? @map("custom_event_data") // JSON for event-specific fields
+
+  // Certificate Status
+  certificateStatus String @default("pending") @map("certificate_status") // "pending", "generated", "failed"
+
+  // Email tracking (per certificate)
+  emailStatus      String    @default("pending") @map("email_status") // "pending", "sent", "failed"
+  emailSentAt      DateTime? @map("email_sent_at")
+  emailError       String?   @map("email_error")
+  emailRetries     Int       @default(0) @map("email_retries")
+  emailLastRetryAt DateTime? @map("email_last_retry_at")
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, eventId]) // One certificate per participant per event
   @@index([participantId])
-  @@map("email_logs")
+  @@index([eventId])
+
+  @@index([emailStatus])
+  @@map("event_participations")
 }
+
+

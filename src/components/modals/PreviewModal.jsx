@@ -88,10 +88,11 @@ export function PreviewModal({ isOpen, onClose, projectId, participants, templat
     };
 
     const handleApprove = async () => {
+        setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
             const response = await fetchWithTimeout(
-                getApiUrl(`api/certificates/projects/${projectId}/approve-preview`),
+                getApiUrl(`api/certificates/events/${projectId}/approve-preview`),
                 {
                     method: 'POST',
                     headers: {
@@ -110,7 +111,11 @@ export function PreviewModal({ isOpen, onClose, projectId, participants, templat
             onApprove();
             onClose();
         } catch (err) {
+            console.error('[Approve] Error:', err);
+            setError(err.message);
             toast.error('Failed to approve preview');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -126,7 +131,7 @@ export function PreviewModal({ isOpen, onClose, projectId, participants, templat
         };
     }, [isOpen]);
 
-    const currentParticipant = participants?.[currentIndex];
+
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>

@@ -84,3 +84,45 @@ export const sendEmailsValidation = [
         .isString().withMessage('Message must be a string')
         .isLength({ max: 5000 }).withMessage('Message must be less than 5000 characters')
 ];
+
+/**
+ * Validation rules for participant management
+ */
+export const participantValidation = [
+    body('name')
+        .trim()
+        .notEmpty().withMessage('Name is required')
+        .isString().withMessage('Name must be a string')
+        .isLength({ max: 100 }).withMessage('Name must be less than 100 characters'),
+
+    body('email')
+        .trim()
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Invalid email address')
+        .normalizeEmail(),
+
+    body('phone')
+        .optional()
+        .trim()
+        .isString().withMessage('Phone must be a string')
+        .isLength({ max: 20 }).withMessage('Phone number too long'),
+
+    body('organization')
+        .optional()
+        .trim()
+        .isString().withMessage('Organization must be a string'),
+
+    body('department')
+        .optional()
+        .trim()
+        .isString().withMessage('Department must be a string'),
+
+    body('jobTitle')
+        .optional()
+        .trim()
+        .isString().withMessage('Job Title must be a string'),
+
+    body('customData')
+        .optional()
+        .isObject().withMessage('Custom data must be a valid JSON object')
+];

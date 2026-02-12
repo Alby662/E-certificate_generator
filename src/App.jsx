@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import CertificateView from './pages/CertificateView'
 import ProtectedRoute from './components/ProtectedRoute'
+import Participants from './pages/Participants'
 import { Toaster } from "@/components/ui/sonner"
 
 function App() {
@@ -15,6 +16,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Home />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/participants"
+                    element={
+                        <ProtectedRoute>
+                            <Participants />
                         </ProtectedRoute>
                     }
                 />

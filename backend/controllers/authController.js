@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../lib/db.js';
+import { DEFAULT_ORGANIZATION_NAME } from '../utils/env.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-change-this';
 const JWT_EXPIRES_IN = '7d'; // 7 days
@@ -40,7 +41,8 @@ export const register = async (req, res) => {
         const user = await db.user.create({
             data: {
                 email,
-                passwordHash
+                passwordHash,
+                organizationName: DEFAULT_ORGANIZATION_NAME
             }
         });
 

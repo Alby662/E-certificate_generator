@@ -1,19 +1,21 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+
 import { rateLimit } from 'express-rate-limit';
+import path from 'path';
+import { ROOT_DIR } from './utils/env.js';
 import authRoutes from './routes/authRoutes.js';
 import certificateRoutes from './routes/certificateRoutes.js';
+import participantRoutes from './routes/participantRoutes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// ROOT_DIR is already the backend root
+const __dirname = ROOT_DIR;
 
 // SECURITY: Rate limiting to prevent abuse
 const limiter = rateLimit({
@@ -37,11 +39,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static files (optional, for accessing generated files directly if needed)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// SECURED: Require authentication and rate limiting to access uploads
+import { authMiddleware } from './middleware/authMiddleware.js';
+app.use('/uploads', limiter, authMiddleware, express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/participants', participantRoutes);
 
 // Base route
 app.get('/', (req, res) => {

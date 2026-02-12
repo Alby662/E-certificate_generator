@@ -5,10 +5,11 @@ async function main() {
     console.log('Cleaning up database...');
     try {
         await prisma.participant.deleteMany({});
-        await prisma.project.deleteMany({});
-        console.log('Deleted all projects and participants.');
+        await prisma.event.deleteMany({});
+        console.log('Deleted all events and participants.');
     } catch (e) {
-        console.error(e);
+        console.error("Error during cleanup:", e);
+        process.exit(1);
     } finally {
         await prisma.$disconnect();
     }

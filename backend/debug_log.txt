@@ -386,3 +386,48 @@ For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides
     Status: SUCCESS
     --------------------------------------------------
     
+    Timestamp: 2026-02-11T10:44:05.308Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5015756302015921,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49212184899204,"y":0.6635295555455616,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770806583166-talbrv5-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770806641230-c23c83e-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T10:44:08.575Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5015756302015921,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49212184899204,"y":0.6635295555455616,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770806583166-talbrv5-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\certificates\CERT-1770806645340-mw2ad7e-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T16:43:21.662Z
+    Participant: {"name":"Christopher-James Montgomery III","email":"test@certificate-generator.com","event":"International Student Leadership Summit 2026","date":"February 7, 2026"}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.490546218790448,"y":0.5123299520642299,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49212184899204003,"y":0.6635295555455617,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770828126202-okxbj7s-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\previews\preview_1770828197514.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T16:43:49.820Z
+    Participant: {"name":"Christopher-James Montgomery III","email":"test@certificate-generator.com","event":"International Student Leadership Summit 2026","date":"February 7, 2026"}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.490546218790448,"y":0.5123299520642299,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.49212184899204003,"y":0.6635295555455617,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770828126202-okxbj7s-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\previews\preview_1770828226540.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-11T16:45:38.391Z
+    Participant: {"name":"Christopher-James Montgomery III","email":"test@certificate-generator.com","event":"International Student Leadership Summit 2026","date":"February 7, 2026"}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4975930198162312,"y":0.5077767281517278,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Technophelia 4.0","x":0.4927790594486937,"y":0.662154825235707,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\templates\1770828300424-urdin0i-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Yukti Yantra\e-certificate-generator\backend\uploads\previews\preview_1770828335202.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    

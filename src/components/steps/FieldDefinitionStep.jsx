@@ -50,7 +50,7 @@ const defaultFields = [
     }
 ];
 
-export function FieldDefinitionStep({ project, participants, templatePath, onNext, onBack, onUpdateProject }) {
+export function FieldDefinitionStep({ project, participants, templatePath, onNext, onBack, onUpdateProject, isMultiEventMode, multiEventData }) {
     const [fields, setFields] = useState(project?.fields || defaultFields);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -59,6 +59,12 @@ export function FieldDefinitionStep({ project, participants, templatePath, onNex
     const isDirty = project?.lastFieldUpdateAt && project?.previewApprovedAt
         ? new Date(project.lastFieldUpdateAt) > new Date(project.previewApprovedAt)
         : false;
+
+    const [eventMetadata, setEventMetadata] = useState({
+        eventName: project?.eventName || '',
+        organizationName: project?.organizationName || 'Yukti Yantra',
+        eventDate: project?.eventDate ? new Date(project.eventDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+    });
 
     const handleNext = async () => {
         if (fields.length === 0) {
@@ -70,47 +76,88 @@ export function FieldDefinitionStep({ project, participants, templatePath, onNex
             toast.warning("Professional recommendation: Please preview and approve the certificate before proceeding.");
         }
 
-        // CREATE PROJECT IF NOT EXISTS
-        if (!project?.id) {
+        // MULTI-EVENT MODE LOGIC
+        if (isMultiEventMode && multiEventData) {
+            // Validate multi-event data structure
+            if (!Array.isArray(multiEventData.participations) || !Array.isArray(multiEventData.events)) {
+                toast.error("Invalid multi-event data structure. Please re-upload the Excel file.");
+                return;
+            }
+
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/api/certificates/create-project`, {
+                const response = await fetch(`${API_BASE_URL}/api/certificates/create-multi-event-project`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        name: `Project ${new Date().toLocaleString()}`,
+                        projectName: eventMetadata.eventName || `Multi-Event Project ${new Date().toLocaleString()}`,
                         templatePath: templatePath,
-                        fields: fields
+                        fields: fields,
+                        participations: multiEventData.participations,
+                        events: multiEventData.events
                     })
                 });
 
                 const data = await response.json();
                 if (data.success) {
-                    // Pass fields AND the new project object
-                    onNext(fields, data.project);
-                    return;
+                    toast.success(`Created ${data.data.events.length} events successfully!`);
+                    // Pass the multi-event data structure as the "project"
+                    onNext(fields, data.data);
                 } else {
-                    toast.error("Failed to initialize project");
-                    // Fallback to continue without project ID (will be created at generation)
+                    toast.error("Failed to create multi-event project: " + data.error);
                 }
             } catch (err) {
-                console.error("Project creation failed:", err);
-                // Fallback
+                console.error("Multi-event creation failed:", err);
+                toast.error("Network error during creation");
             }
+            return;
         }
 
-        // Check if onNext accepts the project argument (based on our future change to Home.jsx)
-        // If project exists, pass it too
-        onNext(fields, project);
+        // STANDARD SINGLE EVENT LOGIC
+        // CREATE EVENT IF NOT EXISTS
+        if (!project?.id) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/certificates/events`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        templatePath: templatePath,
+                        fields: fields,
+                        ...eventMetadata
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    // Update project with new fields
+                    const newProject = { ...data.project, ...eventMetadata };
+                    onNext(fields, newProject);
+                    return;
+                } else {
+                    toast.error("Failed to initialize event");
+                }
+            } catch (err) {
+                console.error("Event creation failed:", err);
+            }
+        } else {
+            // OPTIONAL: Update project metadata if changed
+            // For now, we assume user keeps same metadata or we update it in generation step
+            const updatedProject = { ...project, ...eventMetadata };
+            onNext(fields, updatedProject);
+        }
     };
 
     const handleApproval = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/api/certificates/projects/${project.id}/approve-preview`, {
+            const response = await fetch(`${API_BASE_URL}/api/certificates/events/${project?.id}/approve-preview`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,6 +223,41 @@ export function FieldDefinitionStep({ project, participants, templatePath, onNex
             </CardHeader>
 
             <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="space-y-2">
+                        <label htmlFor="event-name" className="text-sm font-medium">Event Name</label>
+                        <input
+                            id="event-name"
+                            type="text"
+                            value={eventMetadata.eventName}
+                            onChange={(e) => setEventMetadata({ ...eventMetadata, eventName: e.target.value })}
+                            placeholder="e.g. Annual Tech Summit"
+                            className="w-full p-2 border rounded-md text-sm"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="organization-name" className="text-sm font-medium">Organization</label>
+                        <input
+                            id="organization-name"
+                            type="text"
+                            value={eventMetadata.organizationName}
+                            onChange={(e) => setEventMetadata({ ...eventMetadata, organizationName: e.target.value })}
+                            placeholder="e.g. Yukti Yantra"
+                            className="w-full p-2 border rounded-md text-sm"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="event-date" className="text-sm font-medium">Event Date</label>
+                        <input
+                            id="event-date"
+                            type="date"
+                            value={eventMetadata.eventDate}
+                            onChange={(e) => setEventMetadata({ ...eventMetadata, eventDate: e.target.value })}
+                            className="w-full p-2 border rounded-md text-sm"
+                        />
+                    </div>
+                </div>
+
                 {(!isApproved || isDirty) && (
                     <Alert className="mb-4">
                         <AlertDescription>
