@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, CheckCircle, Mail, AlertTriangle } from "lucide-react";
+import { Loader2, CheckCircle, Mail, AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
 
-export function EmailSendingStep({ project, projectId, participants, certificates, onFinish }) {
-    const [status, setStatus] = useState({ sent: 0, failed: 0, total: participants.length, errors: [] });
+export function EmailSendingStep({ project, projectId, participants = [], certificates = [], onFinish }) {
+    // Robust state initialization
+    const [status, setStatus] = useState({
+        total: participants?.length || 0,
+        email: { sent: 0, failed: 0, pending: participants?.length || 0 },
+        generation: { generated: 0, failed: 0, pending: 0 }
+    });
     const [isSending, setIsSending] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
 
@@ -16,29 +21,14 @@ export function EmailSendingStep({ project, projectId, participants, certificate
         setIsSending(true);
 
         try {
-            // Transform certificates array to map if needed, or backend handles it.
-            // Backend expects { participants, certificates }
-            // certificates from GenerationStep might be array of { certificate_id, path }
-            // Let's convert to map for easier backend handling if backend expects map, 
-            // OR just pass what backend expects. 
-            // My backend implementation of `sendEmails` expects `certificates` as a map { id: path }? 
-            // Let's check backend implementation... 
-            // "const certPath = certificatePaths[p.certificate_id];" -> Yes, it expects a map or object.
-
-            const certMap = {};
-            certificates.forEach(c => {
-                // Backend expects a map of { certificate_id: fileName }
-                // We will resolve the full path on the backend
-                certMap[c.certificate_id] = c.fileName || c.filePath || c.path;
-            });
-
-            // Get token
             const token = localStorage.getItem('token');
             if (!token) {
                 toast.error("Please login to send emails");
                 setIsSending(false);
                 return;
             }
+
+            const currentId = project?.id || projectId;
 
             const response = await fetch(`${API_BASE_URL}/api/certificates/send-emails`, {
                 method: 'POST',
@@ -47,9 +37,7 @@ export function EmailSendingStep({ project, projectId, participants, certificate
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    participants,
-                    certificates: certMap,
-                    projectId: project?.id
+                    projectId: currentId
                 }),
             });
 
@@ -59,27 +47,32 @@ export function EmailSendingStep({ project, projectId, participants, certificate
                 toast.success("Email sending started");
                 pollStatus();
             } else {
-                toast.error("Failed to start email sending");
+                toast.error(data.message || "Failed to start email sending");
                 setIsSending(false);
             }
         } catch (err) {
-            toast.error("Network error");
+            console.error("Email start error:", err);
+            toast.error("Network error starting email process");
             setIsSending(false);
         }
     };
 
     const pollStatus = () => {
-        const interval = setInterval(async () => {
+        const intervalId = setInterval(async () => {
             try {
-                if (!project?.id) return;
-
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    clearInterval(interval);
+                const currentId = project?.id || projectId;
+                if (!currentId) {
+                    clearInterval(intervalId);
                     return;
                 }
 
-                const response = await fetch(`${API_BASE_URL}/api/certificates/email-status/${project.id}`, {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    clearInterval(intervalId);
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/api/certificates/email-status/${currentId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -89,22 +82,27 @@ export function EmailSendingStep({ project, projectId, participants, certificate
                 if (!response.ok) return;
 
                 const data = await response.json();
+                if (data.success) {
+                    setStatus(data);
 
-                setStatus(data);
-
-                if (data.sent + data.failed >= data.total) {
-                    clearInterval(interval);
-                    setIsSending(false);
-                    setIsComplete(true);
-                    toast.success("Email sending completed");
+                    // Completion logic
+                    if (data.email.pending === 0 && data.total > 0) {
+                        clearInterval(intervalId);
+                        setIsSending(false);
+                        setIsComplete(true);
+                        toast.success("Email sending completed");
+                    }
                 }
             } catch (err) {
                 console.error("Polling error", err);
             }
-        }, 2000);
+        }, 3000);
+
+        // Safety cleanup for this interval
+        return () => clearInterval(intervalId);
     };
 
-    const progressPercentage = Math.round(((status.sent + status.failed) / status.total) * 100) || 0;
+    const progressPercentage = Math.round((((status.email?.sent ?? 0) + (status.email?.failed ?? 0)) / (status.total || 1)) * 100) || 0;
 
     const handleDownloadZip = async () => {
         try {
@@ -115,13 +113,11 @@ export function EmailSendingStep({ project, projectId, participants, certificate
             }
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/api/certificates/download-zip`, {
-                method: 'POST',
+            const response = await fetch(`${API_BASE_URL}/api/certificates/download/${currentProjectId}`, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ projectId: currentProjectId })
+                }
             });
 
             if (response.ok) {
@@ -136,8 +132,8 @@ export function EmailSendingStep({ project, projectId, participants, certificate
                 document.body.removeChild(a);
                 toast.success("Download started");
             } else {
-                const error = await response.json();
-                toast.error(error.message || "Failed to download ZIP");
+                const errorText = await response.text();
+                toast.error(errorText || "Failed to download ZIP");
             }
         } catch (err) {
             console.error(err);
@@ -150,7 +146,7 @@ export function EmailSendingStep({ project, projectId, participants, certificate
             <CardHeader>
                 <CardTitle>Sending Emails</CardTitle>
                 <CardDescription>
-                    Sending certificates to {participants.length} participants.
+                    Sending certificates to {participants?.length ?? 0} participants.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -164,15 +160,15 @@ export function EmailSendingStep({ project, projectId, participants, certificate
 
                 <div className="grid grid-cols-3 gap-4 text-center">
                     <div className="p-4 bg-slate-50 rounded-lg">
-                        <div className="text-2xl font-bold text-slate-700">{status.total}</div>
+                        <div className="text-2xl font-bold text-slate-700">{status.total ?? 0}</div>
                         <div className="text-xs text-slate-500 uppercase">Total</div>
                     </div>
                     <div className="p-4 bg-green-50 rounded-lg">
-                        <div className="text-2xl font-bold text-green-600">{status.sent}</div>
+                        <div className="text-2xl font-bold text-green-600">{status.email?.sent ?? 0}</div>
                         <div className="text-xs text-green-600 uppercase">Sent</div>
                     </div>
                     <div className="p-4 bg-red-50 rounded-lg">
-                        <div className="text-2xl font-bold text-red-600">{status.failed}</div>
+                        <div className="text-2xl font-bold text-red-600">{status.email?.failed ?? 0}</div>
                         <div className="text-xs text-red-600 uppercase">Failed</div>
                     </div>
                 </div>
@@ -209,12 +205,12 @@ export function EmailSendingStep({ project, projectId, participants, certificate
                             </AlertDescription>
                         </Alert>
 
-                        {status.failed > 0 && (
+                        {(status.email?.failed ?? 0) > 0 && (
                             <Alert variant="destructive">
                                 <AlertTriangle className="h-4 w-4" />
                                 <AlertTitle>Some emails failed</AlertTitle>
                                 <AlertDescription>
-                                    <p>{status.failed} emails could not be sent.</p>
+                                    <p>{status.email?.failed ?? 0} emails could not be sent.</p>
                                     {status.errors && status.errors.length > 0 && (
                                         <div className="mt-2 max-h-40 overflow-y-auto text-xs bg-red-100 p-2 rounded border border-red-200 font-mono">
                                             {status.errors.map((err, i) => (

@@ -71,8 +71,6 @@ export function TemplateUploadStep({ onNext, onMultiEventStart }) {
                 // Backend returns { success, data: { templatePath, publicUrl, filename } }
                 // Use publicUrl for display, templatePath for backend API calls
                 const templatePath = data.data?.publicUrl || data.data?.templatePath || data.templatePath;
-                console.log('[Template Upload] Received:', data.data);
-                console.log('[Template Upload] Using path:', templatePath);
                 onNext(templatePath);
             } else {
                 throw new Error(data.message || "Upload failed");

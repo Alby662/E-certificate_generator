@@ -4,8 +4,16 @@ import { db } from '../lib/db.js';
 export const getParticipants = async (req, res) => {
     try {
         const { search, page = 1, limit = 10 } = req.query;
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-        const take = parseInt(limit);
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+
+        if (isNaN(pageNum) || pageNum < 1 || isNaN(limitNum) || limitNum < 1) {
+            return res.status(400).json({ success: false, message: 'Invalid pagination: page and limit must be positive integers' });
+        }
+
+        const skip = (pageNum - 1) * limitNum;
+        const take = limitNum;
 
         const where = {
             userId: req.user.id, // Scoped to current user
@@ -39,7 +47,7 @@ export const getParticipants = async (req, res) => {
                 total,
                 page: parseInt(page),
                 limit: parseInt(limit),
-                pages: Math.ceil(total / limit)
+                pages: Math.ceil(total / take)
             }
         });
 
@@ -137,7 +145,10 @@ export const updateParticipant = async (req, res) => {
         }
 
         const updated = await db.participant.update({
-            where: { id: parseInt(id) },
+            where: {
+                id: parseInt(id),
+                userId: req.user.id // Ensure atomic ownership check
+            },
             data: {
                 name,
                 email, // Ensure email uniqueness logic handled by DB constraint
@@ -172,7 +183,10 @@ export const deleteParticipant = async (req, res) => {
         }
 
         await db.participant.delete({
-            where: { id: parseInt(id) }
+            where: {
+                id: parseInt(id),
+                userId: req.user.id
+            }
         });
 
         res.json({ success: true, message: 'Participant deleted successfully' });

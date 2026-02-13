@@ -10,7 +10,8 @@ async function testPhaseC() {
         const user = await prisma.user.findFirst();
         if (!user) {
             console.error("❌ No user found. Cannot test.");
-            return;
+            console.error("❌ No user found. Cannot test.");
+            process.exit(1);
         }
         console.log(`👤 Using user: ${user.email} (ID: ${user.id})`);
 

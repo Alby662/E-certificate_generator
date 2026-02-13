@@ -8,18 +8,22 @@ const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-change-this';
  */
 export const authMiddleware = async (req, res, next) => {
     try {
-        // Get token from Authorization header
+        // Get token from Authorization header or Query Parameter (for static assets/images)
         const authHeader = req.headers.authorization;
+        let token = null;
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.substring(7);
+        } else if (req.query.token) {
+            token = req.query.token;
+        }
+
+        if (!token) {
             return res.status(401).json({
                 success: false,
                 message: 'No token provided. Please authenticate.'
             });
         }
-
-        // Extract token
-        const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET);

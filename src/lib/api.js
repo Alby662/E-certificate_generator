@@ -39,3 +39,28 @@ export const getApiUrl = (path) => {
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
     return `${API_BASE_URL}/${cleanPath}`;
 };
+/**
+ * Helper to construct authenticated image URLs
+ * Appends token as query parameter to allow loading via standard <img> tags
+ * @param {string} path - Upload path (e.g., 'uploads/templates/...')
+ * @returns {string} Authenticated URL
+ */
+export const getAuthenticatedImageUrl = (path) => {
+    if (!path || typeof path !== 'string') return '';
+
+    const token = localStorage.getItem('token');
+    const normalized = path.replace(/\\/g, '/');
+    const index = normalized.indexOf('uploads');
+
+    const baseUrl = index !== -1
+        ? `${API_BASE_URL}/${normalized.substring(index)}`
+        : path;
+
+    // Append token if available
+    if (token) {
+        const separator = baseUrl.includes('?') ? '&' : '?';
+        return `${baseUrl}${separator}token=${token}`;
+    }
+
+    return baseUrl;
+};

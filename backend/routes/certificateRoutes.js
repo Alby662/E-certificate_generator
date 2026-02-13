@@ -49,6 +49,15 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
+// Middleware: Validate Project ID
+const validateIdParam = (req, res, next) => {
+    const { projectId } = req.params;
+    if (!projectId || isNaN(parseInt(projectId))) {
+        return res.status(400).json({ success: false, message: 'Invalid Project ID' });
+    }
+    next();
+};
+
 const upload = multer({
     storage,
     fileFilter,
@@ -65,7 +74,7 @@ router.post('/generate', authMiddleware, generateCertificatesValidation, handleV
 // Email routes
 router.post('/send-emails', authMiddleware, sendEmailsValidation, handleValidationErrors, sendEmails);
 router.get('/email-status/:eventId', authMiddleware, getStatus);
-router.get('/download/:projectId', authMiddleware, downloadZip);
+router.get('/download/:projectId', authMiddleware, validateIdParam, downloadZip);
 
 // Event Management Routes (Phase C)
 router.get('/events', authMiddleware, getEvents);

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, ArrowRight, Eye, CheckCircle2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { API_BASE_URL } from '../../lib/api';
+import { API_BASE_URL, getAuthenticatedImageUrl } from '../../lib/api';
 
 const defaultFields = [
     {
@@ -97,7 +97,10 @@ export function FieldDefinitionStep({ project, participants, templatePath, onNex
                         templatePath: templatePath,
                         fields: fields,
                         participations: multiEventData.participations,
-                        events: multiEventData.events
+                        events: multiEventData.events,
+                        eventDate: eventMetadata.eventDate,
+                        eventType: 'standard',
+                        organizationName: eventMetadata.organizationName
                     })
                 });
 
@@ -182,12 +185,7 @@ export function FieldDefinitionStep({ project, participants, templatePath, onNex
         }
     };
 
-    const getImageUrl = (path) => {
-        if (!path || typeof path !== 'string') return '';
-        const normalized = path.replace(/\\/g, '/');
-        const index = normalized.indexOf('uploads');
-        return index !== -1 ? `${API_BASE_URL}/${normalized.substring(index)}` : path;
-    };
+    const getImageUrl = (path) => getAuthenticatedImageUrl(path);
 
     return (
         <Card className="w-full max-w-6xl mx-auto">

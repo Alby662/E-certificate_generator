@@ -177,27 +177,11 @@ export const sendEmailWithRetry = async (participant, attachmentPath, metadata =
 
 
 // Queue Bulk Emails (Throttled)
-export const queueBulkEmails = async (eventId, updateStatusCallback) => {
+export const queueBulkEmails = async (eventId) => {
     console.log(`📧 [Email Queue] Starting for Event ${eventId}`);
 
-    // Fetch recipients: Generated certificates that haven't been sent successfully
-    // Note: We need to import db here or pass it in. db is in ../lib/db.js
-    // Since this is a service, maybe we should pass the participants array? 
-    // But the requirements say "Select records where certificateStatus === 'GENERATED'..."
-    // So we need DB access. Let's import it.
-
-    // Lazy import to avoid circular dependencies if any, or just standard import
-    // We need to add `import { db } from '../lib/db.js';` at top of file.
-    // For now, assuming caller passes participants or we fetch them here.
-    // The requirement: "Create a queueBulkEmails function... Logic: Select records..."
-    // So I will add db import at top (via separate edit) or assume it's available.
-    // I'll add the import in a separate replace block to be safe, or just use dynamic import?
-    // Let's rely on the top-level import I will add.
-
-    // Wait, I can't add top level import in this block easily if it's far away.
-    // I will write the function to accept `db` as dependency or use `import('../lib/db.js')`.
-    // Let's use dynamic import for safety in this refactor step.
-
+    // Verify db import or usage context from caller/environment
+    // (Assuming db is imported at top level as verified in view_file)
     // Initialize summary
     const summary = {
         eventId,
@@ -243,11 +227,20 @@ export const queueBulkEmails = async (eventId, updateStatusCallback) => {
             // Send Email
             try {
                 // Metadata for email template
-                const metadata = {
-                    eventName: p.customEventData ? JSON.parse(p.customEventData).eventName : 'Event',
-                    eventDate: p.customEventData ? JSON.parse(p.customEventData).eventDate : null,
-                    organizationName: p.customEventData ? JSON.parse(p.customEventData).organizationName : null
-                };
+                // Metadata for email template
+                let metadata = { eventName: 'Event', eventDate: null, organizationName: null };
+
+                try {
+                    const custom = p.customEventData ? JSON.parse(p.customEventData) : {};
+                    metadata = {
+                        eventName: custom.eventName || 'Event',
+                        eventDate: custom.eventDate || null,
+                        organizationName: custom.organizationName || null
+                    };
+                } catch (parseErr) {
+                    // Fallback to defaults on error
+                    console.warn(`Failed to parse customEventData for ${p.participant.email}`, parseErr);
+                }
 
                 const result = await sendEmailWithRetry(p.participant, certPath, metadata);
 

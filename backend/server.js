@@ -35,8 +35,8 @@ app.use(cors({
 // Apply rate limiting to all API routes
 app.use('/api', limiter);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Static files (optional, for accessing generated files directly if needed)
 // SECURED: Require authentication and rate limiting to access uploads

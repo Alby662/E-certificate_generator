@@ -65,24 +65,34 @@ export const generateCertificates = async (req, res) => {
         const sanitizedFilename = templatePath ? path.basename(templatePath) : null;
 
         if (projectId) {
-            // Update existing Event
-            event = await db.event.findUnique({
-                where: { id: parseInt(projectId) }
+            // Update existing Event (Enforce Ownership)
+            event = await db.event.findFirst({
+                where: {
+                    id: parseInt(projectId),
+                    userId: req.user.id
+                }
             });
 
-            if (event && event.userId === req.user.id) {
+            if (event) {
                 // Update
-                event = await db.event.update({
-                    where: { id: event.id },
-                    data: {
-                        name: projectName || event.name,
-                        templatePath: sanitizedFilename || event.templatePath,
-                        fields: fields ? JSON.stringify(fields) : event.fields,
-                        lastFieldUpdateAt: new Date()
+                try {
+                    event = await db.event.update({
+                        where: { id: event.id },
+                        data: {
+                            name: projectName || event.name,
+                            templatePath: sanitizedFilename || event.templatePath,
+                            fields: fields ? JSON.stringify(fields) : event.fields,
+                            lastFieldUpdateAt: new Date()
+                        }
+                    });
+                } catch (error) {
+                    if (error.code === 'P2002') {
+                        return res.status(400).json({ success: false, message: 'Event name already exists for this date. Please choose a unique name.' });
                     }
-                });
+                    throw error;
+                }
             } else {
-                event = null;
+                return res.status(403).json({ success: false, message: 'Not authorized to update this project' });
             }
         }
 
@@ -95,7 +105,7 @@ export const generateCertificates = async (req, res) => {
                     name: projectName || `Project ${new Date().toISOString()}`,
                     templatePath: sanitizedFilename,
                     fields: fields ? JSON.stringify(fields) : null,
-                    organizationName: req.body.organizationName,
+                    organizationName: req.body.organizationName || DEFAULT_ORGANIZATION_NAME,
                     eventDate: req.body.eventDate ? new Date(req.body.eventDate) : null,
                     eventType: 'standard'
                 }
@@ -190,7 +200,17 @@ const processCertificatesBackground = async (eventId, userId) => {
 
         if (!fs.existsSync(absoluteTemplatePath)) {
             console.error(`❌ Template not found: ${absoluteTemplatePath}`);
-            // Mark all as failed?
+            // Mark all pending as failed
+            await db.eventParticipation.updateMany({
+                where: {
+                    eventId: eventId,
+                    certificateStatus: 'pending'
+                },
+                data: {
+                    certificateStatus: 'failed',
+                    remarks: `Template not found: ${absoluteTemplatePath}`
+                }
+            });
             return;
         }
 
@@ -227,18 +247,45 @@ const processCertificatesBackground = async (eventId, userId) => {
 
                 try {
                     // Generate PDF
-                    // We need to parse fields from event.fields (string) to object
-                    const fields = event.fields ? JSON.parse(event.fields) : [];
+                    // Safe JSON Parse for fields
+                    let fields = [];
+                    try {
+                        fields = event.fields ? JSON.parse(event.fields) : [];
+                    } catch (parseErr) {
+                        console.error(`   ❌ Failed to parse fields for Event ${event.id}:`, parseErr);
+                        await db.eventParticipation.update({
+                            where: { id: p.id },
+                            data: {
+                                certificateStatus: 'failed',
+                                remarks: 'Invalid request: Malformed fields JSON'
+                            }
+                        });
+                        return; // Skip this participant
+                    }
 
-                    // We need to map participant data to fields if needed, 
-                    // but generateCertificate usually takes participant object directly.
-                    // Ensure generateCertificate logic handles this.
-                    // Based on previous code: generateCertificate(p, absoluteTemplatePath, outputPath, fields);
-                    // p passed here is the EventParticipation object with .participant included. 
-                    // generateCertificate likely expects { name: ... } object.
-                    // The 'p' from findMany has 'participant' relation.
+                    // CRITICAL FIX: Merge Event metadata with participant data
+                    // The certificate generator looks for values in participant[f.key]
+                    // We need to provide event name, date, and organization from the Event table
+                    const participantData = {
+                        ...p.participant, // { name, email, ... }
+                        event: event.name,  // Event name from Event table
+                        eventName: event.name,
+                        date: event.eventDate ? new Date(event.eventDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }) : new Date().toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }),
+                        eventDate: event.eventDate,
+                        organization: event.organizationName,
+                        organizationName: event.organizationName,
+                        college: event.organizationName  // Legacy field support
+                    };
 
-                    const participantData = p.participant; // { name, email, ... }
+                    console.log(`   📝 Generating certificate for ${participantData.name} - Event: ${participantData.event} - Date: ${participantData.date}`);
 
                     await generateCertificate(participantData, absoluteTemplatePath, outputPath, fields);
 
@@ -285,11 +332,16 @@ const processCertificatesBackground = async (eventId, userId) => {
 
 export const getStatus = async (req, res) => {
     try {
-        const { projectId } = req.params; // projectId = eventId
+        const { eventId } = req.params;
+        const id = parseInt(eventId);
+
+        if (isNaN(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid Event ID' });
+        }
 
         const event = await db.event.findFirst({
             where: {
-                id: parseInt(projectId),
+                id: id,
                 userId: req.user.id
             }
         });
@@ -350,8 +402,24 @@ export const sendEmails = async (req, res) => {
     try {
         const { projectId } = req.body;
 
-        // Trigger background queue
-        queueBulkEmails(projectId, null);
+        console.log(`📧 [sendEmails] Received request for projectId: ${projectId}`);
+
+        // Verify Authorization
+        const project = await db.event.findFirst({
+            where: {
+                id: parseInt(projectId),
+                userId: req.user.id
+            }
+        });
+
+        if (!project) {
+            return res.status(403).json({ success: false, message: 'Not authorized or Project not found' });
+        }
+
+        // Trigger background queue (don't await - respond immediately)
+        queueBulkEmails(projectId, null).catch(err => {
+            console.error('❌ [sendEmails] Background queue error:', err);
+        });
 
         res.json({
             success: true,
@@ -359,7 +427,7 @@ export const sendEmails = async (req, res) => {
             projectId: projectId
         });
     } catch (error) {
-        console.error('Send emails error:', error);
+        console.error('❌ [sendEmails] Controller error:', error);
         res.status(500).json({ success: false, message: 'Failed to queue emails.' });
     }
 };
@@ -376,15 +444,18 @@ export const downloadZip = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Project ID is required' });
         }
 
-        const event = await db.event.findUnique({
-            where: { id: parseInt(projectId) },
+        const event = await db.event.findFirst({
+            where: {
+                id: parseInt(projectId),
+                userId: req.user.id
+            },
             include: {
                 participations: true
             }
         });
 
         if (!event) {
-            return res.status(404).json({ success: false, message: 'Project (Event) not found' });
+            return res.status(403).json({ success: false, message: 'Project not found or unauthorized' });
         }
 
         const archive = archiver('zip', {
@@ -440,7 +511,7 @@ export const getEvents = async (req, res) => {
 export const getEvent = async (req, res) => {
     try {
         const { id } = req.params;
-        const event = await db.event.findUnique({
+        const event = await db.event.findFirst({
             where: {
                 id: parseInt(id),
                 userId: req.user.id
@@ -489,33 +560,47 @@ export const deleteEvent = async (req, res) => {
 export const generatePreview = async (req, res) => {
     console.log('\n🚀 [PREVIEW] ========== REQUEST RECEIVED ==========');
     try {
-        const { projectId, participantIndex = 0, templatePath, fields, participant } = req.body;
+        const { projectId, eventId, participantIndex = 0, templatePath, fields, participant } = req.body;
         let targetParticipant, targetTemplatePath, targetFields;
 
+        // Use either projectId or eventId for backward compatibility
+        const targetIdString = eventId || projectId;
+        const targetId = targetIdString ? parseInt(targetIdString) : null;
+
         // MODE 1: Project (Event) exists
-        if (projectId) {
+        if (targetId && !isNaN(targetId)) {
             const event = await db.event.findUnique({
-                where: { id: parseInt(projectId), userId: req.user.id },
+                where: { id: targetId, userId: req.user.id },
                 include: { participations: { include: { participant: true } } }
             });
 
             if (!event) return res.status(404).json({ error: 'Project not found' });
-            if (event.participations.length === 0) return res.status(400).json({ error: 'No participants found' });
 
-            const activeParticipation = event.participations[participantIndex];
-            if (!activeParticipation) return res.status(400).json({ error: 'Participant index out of bounds' });
+            // PRIORITY 1: Use provided participant and fields (for live design feedback)
+            if (participant) {
+                targetParticipant = participant;
+                targetFields = fields || event.fields;
+                targetTemplatePath = templatePath || event.templatePath;
+            }
+            // PRIORITY 2: Fallback to existing participations in DB
+            else if (event.participations.length > 0) {
+                const activeParticipation = event.participations[participantIndex];
+                if (!activeParticipation) return res.status(400).json({ error: 'Participant index out of bounds' });
 
-            targetParticipant = activeParticipation.participant;
-            targetTemplatePath = event.templatePath;
-            targetFields = event.fields;
+                targetParticipant = activeParticipation.participant;
+                targetFields = event.fields;
+                targetTemplatePath = event.templatePath;
+            } else {
+                return res.status(400).json({ error: 'No participants available for preview. Please upload data or provide sample participant.' });
+            }
         }
-        // MODE 2: Design-first
+        // MODE 2: Design-first (Independent of DB)
         else if (templatePath && fields && participant) {
             targetParticipant = participant;
             targetTemplatePath = templatePath;
             targetFields = fields;
         } else {
-            return res.status(400).json({ error: 'Missing required parameters' });
+            return res.status(400).json({ error: 'Missing required parameters: Provide Project ID or (Template + Fields + Participant)' });
         }
 
         // Path Sanitization & Resolution
@@ -527,10 +612,15 @@ export const generatePreview = async (req, res) => {
         }
 
         // Fields Parsing & Validation
-        const parsedFields = typeof targetFields === 'string' ? JSON.parse(targetFields) : targetFields;
+        let parsedFields;
         try {
+            parsedFields = typeof targetFields === 'string' ? JSON.parse(targetFields) : targetFields;
             validateFields(parsedFields);
         } catch (error) {
+            if (error instanceof SyntaxError) {
+                console.error("Invalid targetFields JSON:", error);
+                return res.status(400).json({ error: "Invalid targetFields JSON" });
+            }
             if (error instanceof FieldValidationError) {
                 return res.status(400).json({ error: error.message, field: error.field });
             }
@@ -543,8 +633,39 @@ export const generatePreview = async (req, res) => {
 
         const outputPath = path.join(previewDir, `preview_${Date.now()}.pdf`);
 
+        // CRITICAL FIX: Merge Event metadata if available (MODE 1 only)
+        // In MODE 2 (design-first), event might not exist
+        let enrichedParticipant = targetParticipant;
+        if (targetId && !isNaN(targetId)) {
+            // Event is available from MODE 1 scope above
+            const event = await db.event.findUnique({
+                where: { id: targetId, userId: req.user.id }
+            });
+
+            if (event) {
+                enrichedParticipant = {
+                    ...targetParticipant,
+                    event: event.name,
+                    eventName: event.name,
+                    date: event.eventDate ? new Date(event.eventDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }) : new Date().toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }),
+                    eventDate: event.eventDate,
+                    organization: event.organizationName,
+                    organizationName: event.organizationName,
+                    college: event.organizationName
+                };
+            }
+        }
+
         // Generate
-        await generateCertificate(targetParticipant, absoluteTemplatePath, outputPath, parsedFields);
+        await generateCertificate(enrichedParticipant, absoluteTemplatePath, outputPath, parsedFields);
 
         // Send & Cleanup
         res.sendFile(outputPath, (err) => {
@@ -566,23 +687,36 @@ export const generatePreview = async (req, res) => {
 
 export const approvePreview = async (req, res) => {
     try {
-        const { projectId } = req.params;
-        const event = await db.event.update({
-            where: {
-                id: parseInt(projectId),
-                userId: req.user.id
-            },
-            data: {
-                previewApproved: true,
-                previewApprovedAt: new Date()
-            }
-        });
+        const { eventId } = req.params;
+        const id = parseInt(eventId);
 
-        res.json({
-            success: true,
-            message: 'Preview approved successfully',
-            project: { ...event, id: event.id }
-        });
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'Invalid Event ID' });
+        }
+
+        try {
+            const event = await db.event.update({
+                where: {
+                    id: id,
+                    userId: req.user.id
+                },
+                data: {
+                    previewApproved: true,
+                    previewApprovedAt: new Date()
+                }
+            });
+
+            res.json({
+                success: true,
+                message: 'Preview approved successfully',
+                project: { ...event, id: event.id }
+            });
+        } catch (error) {
+            if (error.code === 'P2025') {
+                return res.status(404).json({ error: 'Event not found or unauthorized' });
+            }
+            throw error;
+        }
 
     } catch (error) {
         console.error('[Approve] Error:', error);
@@ -592,6 +726,9 @@ export const approvePreview = async (req, res) => {
 
 export const importMultiEventExcel = async (req, res) => {
     try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: 'No file uploaded' });
+        }
         const filePath = req.file.path;
 
         // Parse Excel
@@ -636,7 +773,10 @@ export const createMultiEventProject = async (req, res) => {
             templatePath,
             fields,
             participations,        // Array from Excel parse
-            events                 // Array of event names
+            events,                // Array of event names
+            eventDate,
+            eventType,
+            organizationName
         } = req.body;
 
         // Step 1: Create or get participants in registry
@@ -673,16 +813,22 @@ export const createMultiEventProject = async (req, res) => {
                 }
             }
 
-            // Step 2: Create Events (one for each unique event name)
+            // Step 2: Create Events (one for each unique event name) with individual metadata
             const eventMap = new Map();
-            const eventCreationPromises = events.map(async (eventName) => {
+            const eventCreationPromises = events.map(async (eventData) => {
+                // Support both string[] (legacy) and object[] (new format with metadata)
+                const eventName = typeof eventData === 'string' ? eventData : eventData.name;
+                const eventMeta = typeof eventData === 'object' ? eventData : {};
+
                 const event = await tx.event.create({
                     data: {
                         userId: req.user.id,
                         name: `${projectName} - ${eventName}`,
-                        eventDate: new Date(eventDate),
-                        eventType,
-                        organizationName,
+                        eventDate: eventMeta.eventDate
+                            ? new Date(eventMeta.eventDate)
+                            : (eventDate ? new Date(eventDate) : null),
+                        eventType: eventMeta.eventType || eventType || 'standard',
+                        organizationName: eventMeta.organizationName || organizationName || DEFAULT_ORGANIZATION_NAME,
                         templatePath: path.basename(templatePath),
                         fields: JSON.stringify(fields)
                     }

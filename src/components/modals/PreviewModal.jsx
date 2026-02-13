@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ChevronLeft, ChevronRight, CheckCircle, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
@@ -39,11 +39,10 @@ export function PreviewModal({ isOpen, onClose, projectId, participants, templat
         try {
             const token = localStorage.getItem('token');
 
-            // Choose payload based on whether project exists
-            const requestBody = projectId ? {
-                projectId: parseInt(projectId),
-                participantIndex: index
-            } : {
+            // Always send full context for better reliability, especially if DB participations aren't created yet
+            const requestBody = {
+                projectId: projectId ? parseInt(projectId) : null,
+                participantIndex: index,
                 templatePath: templatePath,
                 fields: fields,
                 participant: activeParticipant
@@ -138,9 +137,9 @@ export function PreviewModal({ isOpen, onClose, projectId, participants, templat
             <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Visual QA: Final PDF Preview</DialogTitle>
-                    <p className="text-sm text-muted-foreground">
+                    <DialogDescription>
                         Review the certificate before bulk generation
-                    </p>
+                    </DialogDescription>
                 </DialogHeader>
 
                 {error && (

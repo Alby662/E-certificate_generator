@@ -45,9 +45,9 @@ const logger = winston.createLogger({
 // Legacy support for logEmail (to minimize breakage) but using Winston
 export const logEmail = (level, message, metadata = {}) => {
     logger.log({
+        ...metadata,
         level: level.toLowerCase(),
         message,
-        ...metadata,
         service: 'email-service'
     });
 };

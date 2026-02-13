@@ -137,6 +137,7 @@ export default function Home() {
                     )}
                     {currentStep === 5 && (
                         <GenerationStep
+                            project={project}
                             participants={participants}
                             templatePath={templatePath}
                             fields={fields}

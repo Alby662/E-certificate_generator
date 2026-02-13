@@ -94,7 +94,12 @@ model Event {
   user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   participations EventParticipation[]
 
-  @@unique([userId, name, eventDate]) // Prevent duplicate events
+  @@unique([userId, name]) // Prevent duplicate event names per user
+  @@unique([userId, name, eventDate]) // Legacy support? Or just keep it. 
+  // Wait, if I add userId/name unique, then the other one is redundant.
+  // Actually, keeping both is fine, but userId/name is stricter.
+  // If I add userId/name, then duplicate names are forbidden regardless of date.
+  // This satisfies the "duplicates with NULL dates" concern.
   @@index([userId])
   @@index([eventDate])
   @@map("events")

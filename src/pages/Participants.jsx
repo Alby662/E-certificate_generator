@@ -264,6 +264,7 @@ export default function Participants() {
                                                             variant="ghost"
                                                             size="icon"
                                                             onClick={() => setEditingParticipant(p)}
+                                                            aria-label="Edit participant"
                                                         >
                                                             <Pencil className="w-4 h-4 text-slate-500" />
                                                         </Button>
@@ -271,6 +272,7 @@ export default function Participants() {
                                                             variant="ghost"
                                                             size="icon"
                                                             onClick={() => handleDelete(p.id)}
+                                                            aria-label="Delete participant"
                                                         >
                                                             <Trash2 className="w-4 h-4 text-red-500" />
                                                         </Button>

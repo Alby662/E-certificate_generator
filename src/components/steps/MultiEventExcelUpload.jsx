@@ -126,7 +126,7 @@ export function MultiEventExcelUpload({ onComplete }) {
                                 <div className="text-2xl font-bold text-slate-700">{parseResult.events.length}</div>
                             </div>
                             <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Certificates to Geneate</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Certificates to Generate</span>
                                 <div className="text-2xl font-bold text-slate-700">{parseResult.summary.totalParticipations}</div>
                             </div>
                             <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">

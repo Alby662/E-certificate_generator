@@ -4,19 +4,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import FieldEditorCanvas from "@/components/field-editor-canvas";
 import { useMemo } from "react";
-import { API_BASE_URL } from '../../lib/api';
+import { API_BASE_URL, getAuthenticatedImageUrl } from '../../lib/api';
 
 export function PreviewStep({ participants, templatePath, fields, onNext, onBack }) {
 
-    const getImageUrl = (path) => {
-        if (!path) return '';
-        const normalized = path.replace(/\\/g, '/');
-        const index = normalized.indexOf('uploads');
-        if (index !== -1) {
-            return `${API_BASE_URL}/${normalized.substring(index)}`;
-        }
-        return path;
-    };
+    const getImageUrl = (path) => getAuthenticatedImageUrl(path);
 
     // Create a preview version of fields with actual data from the first participant
     const previewFields = useMemo(() => {

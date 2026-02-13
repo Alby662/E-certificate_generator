@@ -79,7 +79,7 @@ export const parseExcel = (filePath) => {
         // Resolve headers
         const nameHeader = findHeader(headers, 'name');
         const emailHeader = findHeader(headers, 'email');
-        const certIdHeader = findHeader(headers, 'certificate_id') || 'certificate_id';
+        const certIdHeader = findHeader(headers, 'certificate_id');
 
         const missingColumns = [];
         if (!nameHeader) missingColumns.push('name');
@@ -101,7 +101,7 @@ export const parseExcel = (filePath) => {
             const normalizedRow = {
                 name: row[nameHeader],
                 email: row[emailHeader],
-                certificate_id: row[certIdHeader]
+                certificate_id: certIdHeader ? row[certIdHeader] : undefined
             };
 
             const validation = validateParticipantRow(normalizedRow, index, allEmails);
@@ -115,6 +115,7 @@ export const parseExcel = (filePath) => {
                 rowNumber: index + 2,
                 name: normalizedRow.name?.trim() || '',
                 email: normalizedRow.email?.trim().toLowerCase() || '',
+                certificate_id: normalizedRow.certificate_id, // Include validated certificate_id
                 customData: {}
             };
 
@@ -170,10 +171,19 @@ export const parseMultiEventExcel = (filePath) => {
         }
 
         // Detect Headers
+        // Detect Headers
         const headers = Object.keys(rows[0]);
-        const nameHeader = findHeader(headers, 'name') || 'Full Name';
-        const emailHeader = findHeader(headers, 'email') || 'Email';
-        const timestampHeader = findHeader(headers, 'timestamp') || 'Timestamp';
+        const nameHeader = findHeader(headers, 'name');
+        const emailHeader = findHeader(headers, 'email');
+        const timestampHeader = findHeader(headers, 'timestamp');
+
+        const missingCols = [];
+        if (!nameHeader) missingCols.push('Name/Full Name');
+        if (!emailHeader) missingCols.push('Email');
+
+        if (missingCols.length > 0) {
+            throw new Error(`Missing required columns: ${missingCols.join(', ')}`);
+        }
 
         // Detect Event Columns (Looking for "Event 1", "Event 2" or typical variations)
         const eventColumns = headers.filter(h => h.toLowerCase().includes('event'));
@@ -181,6 +191,21 @@ export const parseMultiEventExcel = (filePath) => {
         if (eventColumns.length === 0) {
             throw new Error('No columns containing "Event" found (e.g., Event 1, Event 2)');
         }
+
+        // NEW: Detect and extract event metadata from dedicated rows
+        const metadataKeywords = ['event date', 'eventdate', 'date', 'event type', 'eventtype', 'type', 'organization', 'organisation', 'org', 'event name', 'eventname', 'event'];
+        const eventMetadata = new Map(); // eventColumnName -> {eventDate, eventType, organizationName, eventName}
+
+        // Initialize metadata for each event column
+        eventColumns.forEach(col => {
+            eventMetadata.set(col, {
+                name: col,
+                eventDate: null,
+                eventType: null,
+                organizationName: null,
+                eventName: null
+            });
+        });
 
         const results = {
             participants: new Map(),  // key: email, value: participant data
@@ -193,13 +218,42 @@ export const parseMultiEventExcel = (filePath) => {
                 invalidRows: 0,
                 totalEvents: 0,
                 totalParticipations: 0,
-                participantsWithMultipleEvents: 0
+                participantsWithMultipleEvents: 0,
+                metadataRowsDetected: 0
             }
         };
 
         rows.forEach((row, index) => {
             const rowNumber = index + 2;
             results.summary.totalRows++;
+
+            // Check if this is a metadata row
+            const firstColValue = Object.values(row)[0]?.toString().toLowerCase().trim();
+            const isMetadata = metadataKeywords.some(k => firstColValue?.includes(k));
+
+            if (isMetadata) {
+                // Extract metadata for each event column
+                results.summary.metadataRowsDetected++;
+
+                eventColumns.forEach(col => {
+                    const value = row[col];
+                    const metadata = eventMetadata.get(col);
+
+                    if (value && typeof value === 'string' && value.trim() !== '') {
+                        if (firstColValue.includes('date')) {
+                            metadata.eventDate = value.trim();
+                        } else if (firstColValue.includes('type')) {
+                            metadata.eventType = value.trim();
+                        } else if (firstColValue.includes('organ')) {
+                            metadata.organizationName = value.trim();
+                        } else if (firstColValue.includes('name') || firstColValue === 'event' || firstColValue === 'event:') {
+                            metadata.eventName = value.trim();
+                        }
+                    }
+                });
+
+                return; // Skip processing this row as a participant
+            }
 
             try {
                 // Extract and validate basic data
@@ -223,12 +277,19 @@ export const parseMultiEventExcel = (filePath) => {
                     });
                 }
 
-                // Extract events from detected event columns
+                // Extract events from detected event columns with source column info
                 const eventsFound = [];
                 eventColumns.forEach(col => {
                     const val = row[col];
                     if (val && typeof val === 'string' && val.trim() !== '') {
-                        eventsFound.push(val.trim());
+                        // Check if we have a specific Event Name for this column from metadata
+                        const meta = eventMetadata.get(col);
+                        const eventName = meta?.eventName || val.trim(); // Use metadata name if available, else cell value
+
+                        eventsFound.push({
+                            name: eventName,
+                            sourceColumn: col // Track which column this event came from
+                        });
                     }
                 });
 
@@ -242,13 +303,32 @@ export const parseMultiEventExcel = (filePath) => {
                 }
 
                 // Create participation records
-                const effectiveTimestamp = timestamp || new Date().toISOString();
-                eventsFound.forEach(eventName => {
-                    results.events.add(eventName);
+                // Use null/undefined if timestamp is missing, do NOT default to current time to preserve data fidelity
+                const effectiveTimestamp = timestamp || undefined;
+
+                // Initialize metadata map if not exists
+                if (!results.specificEventMetadata) {
+                    results.specificEventMetadata = new Map();
+                }
+
+                eventsFound.forEach(eventInfo => {
+                    results.events.add(eventInfo.name);
+
+                    // Link this event name to the metadata of its source column
+                    const colMetadata = eventMetadata.get(eventInfo.sourceColumn);
+                    if (colMetadata) {
+                        // If we haven't stored metadata for this event name yet, do it.
+                        // OR if we have, maybe check for consistency? 
+                        // For now, first wins or overwrite is fine since column metadata is static per column.
+                        if (!results.specificEventMetadata.has(eventInfo.name)) {
+                            results.specificEventMetadata.set(eventInfo.name, colMetadata);
+                        }
+                    }
+
                     results.participations.push({
                         email,
                         name,
-                        eventName,
+                        eventName: eventInfo.name,
                         timestamp: effectiveTimestamp
                     });
                     results.summary.totalParticipations++;
@@ -260,7 +340,7 @@ export const parseMultiEventExcel = (filePath) => {
                 results.summary.invalidRows++;
                 results.errors.push({
                     row: rowNumber,
-                    data: row,
+                    // data: row, // REDACTED PII: Don't log full row
                     error: error.message
                 });
             }
@@ -286,9 +366,23 @@ export const parseMultiEventExcel = (filePath) => {
             }
         });
 
+        // Convert events Set to array with metadata
+        const eventsWithMetadata = Array.from(results.events).map(eventName => {
+            // Retrieve the metadata linked to this event name
+            const metadata = results.specificEventMetadata?.get(eventName) || {};
+
+            return {
+                name: eventName,
+                eventDate: metadata.eventDate || null,
+                eventType: metadata.eventType || null,
+                organizationName: metadata.organizationName || null,
+                eventName: metadata.eventName || null
+            };
+        });
+
         return {
             participants: Array.from(results.participants.values()),
-            events: Array.from(results.events),
+            events: eventsWithMetadata,  // NOW: Array of objects with metadata
             participations: results.participations,
             errors: results.errors,
             summary: results.summary
@@ -298,3 +392,4 @@ export const parseMultiEventExcel = (filePath) => {
         throw new Error(`Failed to parse Multi-Event Excel: ${error.message}`);
     }
 };
+

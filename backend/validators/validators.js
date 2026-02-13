@@ -69,8 +69,9 @@ export const generateCertificatesValidation = [
  * Validation rules for sending emails
  */
 export const sendEmailsValidation = [
-    body('participants')
-        .isArray({ min: 1 }).withMessage('At least one participant is required'),
+    body('projectId')
+        .notEmpty().withMessage('Project ID is required')
+        .isInt({ min: 1 }).withMessage('Project ID must be a valid positive integer'),
 
     body('subject')
         .optional()

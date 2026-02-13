@@ -69,7 +69,7 @@ export function GenerationStep({ project, participants, templatePath, fields, on
 
                 setMultiStatus(newMultiStatus);
                 const overallProgress = totalTarget > 0 ? (totalGen / totalTarget) * 100 : 0;
-                setProgress(Math.round(overallProgress));
+                setProgress(prev => Math.round(overallProgress));
 
                 if (allComplete && totalTarget > 0) {
                     setIsComplete(true);
@@ -94,7 +94,7 @@ export function GenerationStep({ project, participants, templatePath, fields, on
 
                     // Calculate overall progress
                     const genProgress = data.total > 0 ? ((data.generation.generated + data.generation.failed) / data.total) * 100 : 0;
-                    setProgress(Math.round(genProgress));
+                    setProgress(prev => Math.round(genProgress));
 
                     // Check for completion
                     if (data.generation.pending === 0 && data.total > 0) {
@@ -172,10 +172,15 @@ export function GenerationStep({ project, participants, templatePath, fields, on
                         participants,
                         templatePath: templatePath || 'default-template.png',
                         fields,
-                        projectName: `Event ${new Date().toLocaleDateString()}`,
+                        projectName: project?.eventName || project?.name || `Event ${new Date().toLocaleDateString()}`,
                         projectId: project?.id
                     }),
                 });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `Generation failed with status ${response.status}`);
+                }
 
                 const data = await response.json();
 

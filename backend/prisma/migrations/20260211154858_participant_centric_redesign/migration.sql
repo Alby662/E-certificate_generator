@@ -2,7 +2,6 @@
 ALTER TABLE "users" ADD COLUMN "organization_name" TEXT;
 
 -- CreateTable
--- CreateTable
 CREATE TABLE "participants" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "user_id" INTEGER NOT NULL,
@@ -73,8 +72,6 @@ CREATE UNIQUE INDEX "participants_participant_id_key" ON "participants"("partici
 -- CreateIndex
 CREATE INDEX "participants_email_idx" ON "participants"("email");
 
--- CreateIndex
-CREATE INDEX "participants_participant_id_idx" ON "participants"("participant_id");
 
 -- CreateIndex
 CREATE INDEX "participants_user_id_idx" ON "participants"("user_id");
@@ -100,8 +97,7 @@ CREATE INDEX "event_participations_participant_id_idx" ON "event_participations"
 -- CreateIndex
 CREATE INDEX "event_participations_event_id_idx" ON "event_participations"("event_id");
 
--- CreateIndex
-CREATE INDEX "event_participations_certificate_id_idx" ON "event_participations"("certificate_id");
+
 
 -- CreateIndex
 CREATE INDEX "event_participations_email_status_idx" ON "event_participations"("email_status");
