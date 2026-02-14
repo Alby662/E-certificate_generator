@@ -386,3 +386,165 @@ For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides
     Status: SUCCESS
     --------------------------------------------------
     
+    Timestamp: 2026-02-13T17:53:58.697Z
+    Participant: {"rowNumber":2,"name":"Chitra Keerti","email":"chitrakeerti20@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005220559-cv59lpw-0_Chitra_Keerti.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:02.063Z
+    Participant: {"rowNumber":3,"name":"Varsha Gururaj Banakar","email":"varshabanakar123@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005238738-ba6xphw-1_Varsha_Gururaj_Banakar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:05.396Z
+    Participant: {"rowNumber":4,"name":"Sanika D Shirahatii","email":"sanikads032@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005242093-ah9pbes-2_Sanika_D_Shirahatii.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:08.754Z
+    Participant: {"rowNumber":5,"name":"Vijayalaxmi kakhandaki","email":"vijayalaxmikakhandaki599@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005245458-j69vb39-3_Vijayalaxmi_kakhandaki.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:12.057Z
+    Participant: {"rowNumber":6,"name":"Sahana Ravi Dambe","email":"sahanadambe048@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005248783-faqar5r-4_Sahana_Ravi_Dambe.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:16.269Z
+    Participant: {"rowNumber":7,"name":"Saisha Mahesh Hupare","email":"saishahupare@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005252090-aoaa9av-5_Saisha_Mahesh_Hupare.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:19.602Z
+    Participant: {"rowNumber":9,"name":"Pratiksha Rajendra Shivanagi","email":"pratikshashivanagi@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005256296-sg2u3z8-6_Pratiksha_Rajendra_Shivanagi.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T17:54:22.892Z
+    Participant: {"rowNumber":10,"name":"Atharv Ashok Shinde","email":"pranavrepe1715@gmail.com","customData":{"Event":"Asgardian Realms Rangoli"}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49212184899204,"y":0.5101038823476504,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.4921218489920401,"y":0.667981694978721,"fontSize":0.015,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771005074558-j9h8wsp-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771005259631-unoz674-7_Atharv_Ashok_Shinde.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T18:24:53.889Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49527310939522395,"y":0.5123299520642299,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.49369747919363205,"y":0.6523992069626635,"fontSize":0.013,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3},{"id":"3","key":"date","label":"5th & 6th February","x":0.6512604993528318,"y":0.6967474640481726,"fontSize":0.015,"color":"#666666","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771006998805-xcl4cb6-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771007090437-bmshqfw-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T18:24:57.233Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.49527310939522395,"y":0.5123299520642299,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.49369747919363205,"y":0.6523992069626635,"fontSize":0.013,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3},{"id":"3","key":"date","label":"5th & 6th February","x":0.6512604993528318,"y":0.6967474640481726,"fontSize":0.015,"color":"#666666","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771006998805-xcl4cb6-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771007093925-6wpq001-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T18:31:18.559Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5,"y":0.5034256731979114,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Event Name","x":0.498424369798408,"y":0.6590774161124023,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3},{"id":"3","key":"date","label":"Date","x":0.6607142805623838,"y":0.6922953246150132,"fontSize":0.025,"color":"#666666","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771007446906-44rok4g-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771007475181-dl2r0kf-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-13T18:31:21.805Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 4000x2828px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.5,"y":0.5034256731979114,"fontSize":0.05,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Event Name","x":0.498424369798408,"y":0.6590774161124023,"fontSize":0.03,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3},{"id":"3","key":"date","label":"Date","x":0.6607142805623838,"y":0.6922953246150132,"fontSize":0.025,"color":"#666666","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":0}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771007446906-44rok4g-1769503616807-Final_Certificate_Yukti_Yantra.png
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771007478598-a7hhxbi-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:23:39.172Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.44800420334746394,"y":0.5256863703637078,"fontSize":0.025,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asguardian Realms Rangoli","x":0.38497899528378415,"y":0.6101038823476503,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771064531902-02fqtuh-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771064615925-td1mmz2-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:23:41.393Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.44800420334746394,"y":0.5256863703637078,"fontSize":0.025,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asguardian Realms Rangoli","x":0.38497899528378415,"y":0.6101038823476503,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771064531902-02fqtuh-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771064619207-cfpr15i-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:32:42.748Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.41491596911403206,"y":0.5323645795134468,"fontSize":0.02,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Code Reconstruction","x":0.37394958387264016,"y":0.6145560217808095,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771065082963-lbp2sqw-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771065159908-gtozw2y-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:32:44.801Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.41491596911403206,"y":0.5323645795134468,"fontSize":0.02,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Code Reconstruction","x":0.37394958387264016,"y":0.6145560217808095,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771065082963-lbp2sqw-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771065162782-j1er0yc-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:36:31.615Z
+    Participant: {"rowNumber":2,"name":"Rehan Jamaar","email":"rehanjamadar627@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4353991617347281,"y":0.5345906492300263,"fontSize":0.02,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.3392857194376162,"y":0.6167820914973893,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771065321620-rlygowp-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771065388774-hu59x8o-0_Rehan_Jamaar.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    
+    Timestamp: 2026-02-14T10:36:33.509Z
+    Participant: {"rowNumber":3,"name":"Albion Winston","email":"albionwinston662@gmail.com","customData":{}}
+    Template Dimensions: 3508x2482px
+    Fields: [{"id":"1","key":"name","label":"Recipient Name","x":0.4353991617347281,"y":0.5345906492300263,"fontSize":0.02,"color":"#1a1a1a","align":"center","fontWeight":"bold","fontFamily":"Playfair Display","vOffset":-6},{"id":"2","key":"event","label":"Asgardian Realms Rangoli","x":0.3392857194376162,"y":0.6167820914973893,"fontSize":0.02,"color":"#333333","align":"center","fontWeight":"normal","fontFamily":"Montserrat","vOffset":-3}]
+    TemplatePath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\templates\1771065321620-rlygowp-Certificates.jpg.jpeg
+    OutputPath: E:\Projects_\Projects\e-certificate\E-certificate_generator\backend\uploads\certificates\CERT-1771065391639-kjh7k11-1_Albion_Winston.pdf
+    Status: SUCCESS
+    --------------------------------------------------
+    

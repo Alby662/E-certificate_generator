@@ -114,7 +114,7 @@ export function GenerationStep({ project, participants, templatePath, fields, on
                     participants,
                     templatePath: templatePath || 'default-template.png',
                     fields,
-                    projectName: `Certificate Project ${new Date().toLocaleDateString()}`,
+                    projectName: `Certificate Project ${new Date().toLocaleDateString()} ${Date.now()}`,
                     projectId: project?.id // PASS EXISTING PROJECT ID
                 }),
             });
@@ -143,7 +143,6 @@ export function GenerationStep({ project, participants, templatePath, fields, on
         }
     };
 
-    // ... handleDownloadZip ...
     const handleDownloadZip = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -151,7 +150,15 @@ export function GenerationStep({ project, participants, templatePath, fields, on
                 toast.error('Please login to continue');
                 return;
             }
-            const projectId = generatedCertificates[0]?.projectId || 1;
+
+            // Use responseProjectId from generation response, or fall back to project.id
+            const projectId = responseProjectId || project?.id;
+
+            if (!projectId) {
+                toast.error('Project ID not found. Please regenerate certificates.');
+                return;
+            }
+
             const response = await fetch(`${API_BASE_URL}/api/certificates/download-zip`, {
                 method: 'POST',
                 headers: {

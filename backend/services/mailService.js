@@ -20,15 +20,24 @@ const transporter = nodemailer.createTransport({
 
 console.log(`📧 Configuring email service for: ${process.env.EMAIL_USER}`);
 
-// Verify connection configuration
-transporter.verify(function (error, success) {
-    if (error) {
-        console.error('❌ SMTP Connection Error:');
-        console.error(error);
-    } else {
-        console.log('✅ SMTP Server is ready to take our messages');
-    }
-});
+// Verify connection configuration (non-blocking)
+// Only verify if valid credentials are provided
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS &&
+    process.env.EMAIL_USER !== 'test@example.com' &&
+    process.env.EMAIL_PASS !== 'test-password') {
+    transporter.verify(function (error, success) {
+        if (error) {
+            console.warn('⚠️  SMTP Connection Warning (email sending may not work):');
+            console.warn(`   ${error.message}`);
+            console.warn('   Please update EMAIL_USER and EMAIL_PASS in backend/.env to enable email sending.');
+        } else {
+            console.log('✅ SMTP Server is ready to take our messages');
+        }
+    });
+} else {
+    console.warn('⚠️  Email service not configured (using placeholder credentials).');
+    console.warn('   Email sending is disabled. Update backend/.env to enable it.');
+}
 
 // Load email template
 const getEmailTemplate = (participant) => {
@@ -41,6 +50,46 @@ const getEmailTemplate = (participant) => {
     template = template.replace(/{{organization}}/g, participant.college);
 
     return template;
+};
+
+/**
+ * Categorize email errors for better error handling
+ * @param {Error} error - The error object from nodemailer
+ * @returns {object} - Categorized error information
+ */
+const categorizeEmailError = (error) => {
+    const errorCode = error.code || '';
+    const errorMessage = error.message || '';
+
+    if (errorCode === 'EAUTH' || errorMessage.includes('Invalid login')) {
+        return {
+            category: 'AUTHENTICATION',
+            userMessage: 'Email authentication failed. Please check your email credentials.',
+            technical: `SMTP Auth Error: ${errorMessage}`
+        };
+    }
+
+    if (errorCode === 'ECONNECTION' || errorCode === 'ETIMEDOUT') {
+        return {
+            category: 'CONNECTION',
+            userMessage: 'Unable to connect to email server. Please check your internet connection.',
+            technical: `Connection Error: ${errorMessage}`
+        };
+    }
+
+    if (errorCode === 'EMESSAGE' || errorMessage.includes('Attachment')) {
+        return {
+            category: 'ATTACHMENT',
+            userMessage: 'Failed to attach certificate. Please try again.',
+            technical: `Attachment Error: ${errorMessage}`
+        };
+    }
+
+    return {
+        category: 'UNKNOWN',
+        userMessage: 'Failed to send email. Please try again later.',
+        technical: errorMessage
+    };
 };
 
 export const sendEmail = async (participant, attachmentPath) => {

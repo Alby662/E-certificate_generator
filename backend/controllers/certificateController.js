@@ -296,6 +296,44 @@ async function sendEmailsInBackground(projectId, participants) {
     const DELAY_MS = 2000;
     const certificateDir = path.join(__dirname, '../uploads/certificates');
 
+    // Fetch project to get fields configuration
+    const project = await db.project.findUnique({
+        where: { id: projectId }
+    });
+
+    // Extract event name from certificate fields
+    let eventName = 'Asgardian Realms Rangoli';
+    let organizationName = 'ACSES Team';
+
+    if (project && project.fields) {
+        try {
+            const fields = JSON.parse(project.fields);
+            // Find the field with the event/title text
+            // Look for common field types that contain the event name
+            const eventField = fields.find(f =>
+                f.type === 'text' &&
+                (f.label?.toLowerCase().includes('event') ||
+                    f.label?.toLowerCase().includes('title') ||
+                    f.label?.toLowerCase().includes('certificate'))
+            );
+            if (eventField && eventField.text) {
+                eventName = eventField.text;
+            }
+
+            // You can also extract organization if needed
+            const orgField = fields.find(f =>
+                f.type === 'text' &&
+                (f.label?.toLowerCase().includes('organization') ||
+                    f.label?.toLowerCase().includes('college'))
+            );
+            if (orgField && orgField.text) {
+                organizationName = orgField.text;
+            }
+        } catch (e) {
+            console.warn('[Worker] Failed to parse project fields for event name:', e);
+        }
+    }
+
     for (let i = 0; i < participants.length; i += BATCH_SIZE) {
         const batch = participants.slice(i, i + BATCH_SIZE);
 
@@ -308,8 +346,15 @@ async function sendEmailsInBackground(projectId, participants) {
 
             const absPath = path.join(certificateDir, p.certificate.filePath);
 
+            // Enhance participant object with event and organization info
+            const enhancedParticipant = {
+                ...p,
+                event: eventName,
+                college: organizationName
+            };
+
             // Send
-            const result = await sendEmailWithRetry(p, absPath);
+            const result = await sendEmailWithRetry(enhancedParticipant, absPath);
 
             if (result.success) {
                 // Update Log
